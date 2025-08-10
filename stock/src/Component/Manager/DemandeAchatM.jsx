@@ -30,6 +30,7 @@ import {
 } from "lucide-react"
 import {
   ChartBarIcon,
+  UserGroupIcon,
   DocumentTextIcon,
   ShoppingCartIcon,
   UserCircleIcon,
@@ -39,9 +40,16 @@ import {
 import { NavLink } from "react-router-dom"
 
 // Composant Navbar (assuming this is the shared Navbar from Navbar.jsx)
-const Navbar = ({ menuItems }) => {
+const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
+
+  const menuItems = [
+    
+    { name: "Articles", icon: DocumentTextIcon, path: "/articlesM" },
+    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatM" },
+    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
+  ]
 
   const handleLogout = () => {
     // Logique de déconnexion - vider le localStorage
@@ -196,7 +204,7 @@ const DetailItem = ({
   </div>
 )
 
-export default function DemandeAchatE() {
+export default function DemandeAchatM() {
   const navigate = useNavigate()
   const [demandes, setDemandes] = useState([])
   const [search, setSearch] = useState("")
@@ -356,17 +364,11 @@ export default function DemandeAchatE() {
     return new Date(dateString).toLocaleDateString("fr-FR", options)
   }
 
-  const menuItems = [
-    { name: "Articles", icon: DocumentTextIcon, path: "/articlesE" },
-    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatE" },
-    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
-  ]
-
   return (
     <div className="flex min-h-screen">
       {/* Barre de navigation latérale fixe */}
       <div className="fixed left-0 top-0 bottom-0 z-20">
-        <Navbar menuItems={menuItems} />
+        <Navbar />
       </div>
       {/* Contenu principal avec marge pour la navbar */}
       <div className="flex-1 flex flex-col ml-0 lg:ml-72">
@@ -392,7 +394,12 @@ export default function DemandeAchatE() {
                 </div>
 
                 <nav className="p-4">
-                  {menuItems.map((item) => (
+                  {[
+                    
+                    { name: "Articles", icon: DocumentTextIcon, path: "/articlesM" },
+                    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatM" },
+                    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
+                  ].map((item) => (
                     <NavLink
                       key={item.name}
                       to={item.path}
@@ -436,14 +443,14 @@ export default function DemandeAchatE() {
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                      Consultation des Demandes d'Achat
+                      Gestion des Demandes d'Achat
                     </h1>
-                    <p className="text-slate-600 mt-1">Consulter et suivre les demandes d'approvisionnement</p>
+                    <p className="text-slate-600 mt-1">Gérer et suivre les demandes d'approvisionnement</p>
                   </div>
                 </div>
                 <button
                   className="group bg-gradient-to-r from-cyan-600 to-teal-700 hover:from-cyan-700 hover:to-teal-800 text-white px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                  onClick={() => navigate("/ajout-demande-achatE")}
+                  onClick={() => navigate("/ajout-demande-achatM")}
                 >
                   <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
                   Créer une Demande
@@ -519,7 +526,7 @@ export default function DemandeAchatE() {
                   <p className="text-cyan-100 mt-1">{filteredDemandes.length} demande(s) en cours</p>
                 </div>
                 <div className="overflow-x-auto md:overflow-x-visible">
-                  <table className="w-full table-fixed">
+                  <table className="w-full ">
                     <thead className="bg-gradient-to-r from-gray-50 to-cyan-50 border-b border-gray-200/50">
                       <tr>
                         {["Demande", "Quantité", "Statut", "Article", "Actions"].map((th, i) => (
@@ -603,7 +610,20 @@ export default function DemandeAchatE() {
                               >
                                 <Eye className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
                               </button>
-                              
+                              <button
+                                className="group/btn bg-cyan-50 hover:bg-cyan-100 text-cyan-600 hover:text-cyan-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
+                                onClick={() => navigate(`/modif-demande-achat/${demande.id}`)}
+                                title="Modifier"
+                              >
+                                <Pencil className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
+                              </button>
+                              <button
+                                className="group/btn bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
+                                onClick={() => deleteDemande(demande.id)}
+                                title="Supprimer"
+                              >
+                                <Trash2 className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -632,7 +652,7 @@ export default function DemandeAchatE() {
                                 </p>
                               </div>
                               <button
-                                onClick={() => navigate("/ajout-demande-achatE")}
+                                onClick={() => navigate("/ajout-demande-achat")}
                                 className="bg-gradient-to-r from-cyan-600 to-teal-700 hover:from-cyan-700 hover:to-teal-800 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
                               >
                                 <Plus className="w-5 h-5" />

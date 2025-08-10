@@ -121,13 +121,14 @@ const Navbar = () => {
       {/* Sidebar Desktop - Fixe et ne défile pas */}
       <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
         <div className="flex items-center justify-between p-6 border-b">
-          <div className="flex items-center">
-            <div className="bg-indigo-600 text-white p-2 rounded-lg">
-              <ChartBarIcon className="h-6 w-6" />
+            <div className="flex items-center">
+              <img 
+                src="src\Component\images\exprom.jpeg" 
+                alt="Logo" 
+                className="h-10 w-auto object-contain" 
+              />
             </div>
-            <h1 className="ml-3 text-xl font-bold text-gray-800">Panel</h1>
-          </div>
-        </div>
+           </div>
 
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           {menuItems.map((item) => (
@@ -204,7 +205,7 @@ const DetailItem = ({
   </div>
 )
 
-export default function DemandeAchatE() {
+export default function DemandeAchat() {
   const navigate = useNavigate()
   const [demandes, setDemandes] = useState([])
   const [search, setSearch] = useState("")
@@ -451,7 +452,7 @@ export default function DemandeAchatE() {
                 </div>
                 <button
                   className="group bg-gradient-to-r from-cyan-600 to-teal-700 hover:from-cyan-700 hover:to-teal-800 text-white px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                  onClick={() => navigate("/ajout-demande-achatE")}
+                  onClick={() => navigate("/ajout-demande-achat")}
                 >
                   <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
                   Créer une Demande
@@ -527,7 +528,7 @@ export default function DemandeAchatE() {
                   <p className="text-cyan-100 mt-1">{filteredDemandes.length} demande(s) en cours</p>
                 </div>
                 <div className="overflow-x-auto md:overflow-x-visible">
-                  <table className="w-full table-fixed">
+                  <table className="w-full ">
                     <thead className="bg-gradient-to-r from-gray-50 to-cyan-50 border-b border-gray-200/50">
                       <tr>
                         {["Demande", "Quantité", "Statut", "Article", "Actions"].map((th, i) => (

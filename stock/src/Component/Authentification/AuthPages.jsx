@@ -1,6 +1,6 @@
 "use client"
-
 import { useState } from "react"
+import { useNavigate } from "react-router-dom" // Importez useNavigate
 import { Eye, EyeOff, User, Lock, Mail, Phone, MapPin, UserPlus, LogIn, ArrowLeft } from "lucide-react"
 
 // Composants définis en dehors du composant principal pour éviter les re-créations
@@ -61,13 +61,13 @@ const AuthPages = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate() // Initialisez useNavigate
 
   // États pour les formulaires
   const [signinData, setSigninData] = useState({
     email: "",
     password: "",
   })
-
   const [signupData, setSignupData] = useState({
     nom: "",
     prenom: "",
@@ -77,7 +77,6 @@ const AuthPages = () => {
     password: "",
     confirmPassword: "",
   })
-
   const [errors, setErrors] = useState({})
 
   // Configuration API
@@ -86,87 +85,83 @@ const AuthPages = () => {
   // Validation des champs
   const validateSignin = () => {
     const newErrors = {}
-
     if (!signinData.email.trim()) {
       newErrors.email = "Email requis"
     } else if (!/\S+@\S+\.\S+/.test(signinData.email)) {
       newErrors.email = "Format email invalide"
     }
-
     if (!signinData.password.trim()) {
       newErrors.password = "Mot de passe requis"
     }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const validateSignup = () => {
     const newErrors = {}
-
     if (!signupData.nom.trim()) newErrors.nom = "Nom requis"
     if (!signupData.prenom.trim()) newErrors.prenom = "Prénom requis"
-
     if (!signupData.email.trim()) {
       newErrors.email = "Email requis"
     } else if (!/\S+@\S+\.\S+/.test(signupData.email)) {
       newErrors.email = "Format email invalide"
     }
-
     if (!signupData.password.trim()) {
       newErrors.password = "Mot de passe requis"
     } else if (signupData.password.length < 6) {
       newErrors.password = "Minimum 6 caractères"
     }
-
     if (signupData.password !== signupData.confirmPassword) {
       newErrors.confirmPassword = "Les mots de passe ne correspondent pas"
     }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  // Gestion de la connexion avec votre backend
+  // Gestion de la connexion avec votre backend Spring Security
   const handleSignin = async () => {
     if (!validateSignin()) return
-
     setIsLoading(true)
     setErrors({})
 
     try {
-      // Récupérer tous les utilisateurs depuis votre backend
-      const response = await fetch(`${API_BASE_URL}/utilisateurs`)
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: signinData.email,
+          password: signinData.password,
+        }),
+      })
 
-      if (!response.ok) {
-        throw new Error("Erreur de connexion au serveur")
-      }
-
-      const users = await response.json()
-
-      // Vérifier les identifiants côté client
-      const user = users.find((u) => u.email === signinData.email && u.password === signinData.password)
-
-      if (user) {
+      if (response.ok) {
+        const user = await response.json()
         // Connexion réussie - stocker les informations utilisateur dans localStorage
         localStorage.setItem("currentUser", JSON.stringify(user))
         alert(`Connexion réussie! Bienvenue ${user.prenom} ${user.nom}`)
 
         // Redirection basée sur le rôle de l'utilisateur
         if (user.role === "ADMIN") {
-          window.location.href = "http://localhost:5173/dash-admin"
+          navigate("/dash-admin")
         } else if (user.role === "EMPLOYEE") {
-          window.location.href = "http://localhost:5173/articlesE"
-        } else {
+          navigate("/articlesE")
+        } else if (user.role === "MANAGER") {
+          navigate("/articlesM")
+        } else if (user.role === "MAGASINIER") {
+          navigate("/articlesMM")
+        }else {
           // Fallback pour les rôles non reconnus ou par défaut
-          window.location.href = "http://localhost:5173/"
+          navigate("/")
         }
       } else {
-        setErrors({ general: "Email ou mot de passe incorrect" })
+        const errorData = await response.json()
+        setErrors({ general: errorData.message || "Email ou mot de passe incorrect." })
       }
     } catch (error) {
       console.error("Erreur lors de la connexion:", error)
-      setErrors({ general: "Erreur de connexion. Vérifiez que le serveur est démarré." })
+      setErrors({ general: "Erreur de connexion. Vérifiez que le serveur est démarré et accessible." })
     } finally {
       setIsLoading(false)
     }
@@ -175,17 +170,15 @@ const AuthPages = () => {
   // Gestion de l'inscription avec votre backend
   const handleSignup = async () => {
     if (!validateSignup()) return
-
     setIsLoading(true)
     setErrors({})
 
     try {
-      // Vérifier si l'email existe déjà
+      // Vérifier si l'email existe déjà (cette vérification peut aussi être faite côté serveur)
       const checkResponse = await fetch(`${API_BASE_URL}/utilisateurs`)
       if (checkResponse.ok) {
         const existingUsers = await checkResponse.json()
         const emailExists = existingUsers.some((user) => user.email === signupData.email)
-
         if (emailExists) {
           setErrors({ email: "Cet email est déjà utilisé" })
           setIsLoading(false)
@@ -200,7 +193,7 @@ const AuthPages = () => {
         email: signupData.email.trim(),
         telephone: signupData.telephone.trim() || null,
         adresse: signupData.adresse.trim() || null,
-        password: signupData.password,
+        password: signupData.password, // Le mot de passe est envoyé en texte clair, le backend le hachera
         role: "EMPLOYEE", // Par défaut comme demandé
       }
 
@@ -213,11 +206,11 @@ const AuthPages = () => {
       })
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la création du compte")
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Erreur lors de la création du compte")
       }
 
       const createdUser = await response.json()
-
       // Réinitialiser le formulaire
       setSignupData({
         nom: "",
@@ -228,7 +221,6 @@ const AuthPages = () => {
         password: "",
         confirmPassword: "",
       })
-
       setErrors({})
       alert(
         `Compte créé avec succès! Bienvenue ${createdUser.prenom} ${createdUser.nom}. Vous pouvez maintenant vous connecter.`,
@@ -236,7 +228,9 @@ const AuthPages = () => {
       setCurrentPage("signin")
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error)
-      setErrors({ general: "Erreur lors de la création du compte. Vérifiez que le serveur est démarré." })
+      setErrors({
+        general: error.message || "Erreur lors de la création du compte. Vérifiez que le serveur est démarré.",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -286,13 +280,11 @@ const AuthPages = () => {
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Se connecter</h2>
               <p className="text-gray-600">Accédez à votre espace personnel</p>
             </div>
-
             {errors.general && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                 {errors.general}
               </div>
             )}
-
             <div className="space-y-6">
               <InputField
                 icon={Mail}
@@ -303,7 +295,6 @@ const AuthPages = () => {
                 onChange={handleSigninChange}
                 error={errors.email}
               />
-
               <PasswordField
                 name="password"
                 placeholder="Mot de passe"
@@ -313,7 +304,6 @@ const AuthPages = () => {
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
               />
-
               <button
                 onClick={handleSignin}
                 disabled={isLoading}
@@ -329,7 +319,6 @@ const AuthPages = () => {
                 )}
               </button>
             </div>
-
             <div className="mt-8 text-center">
               <p className="text-gray-600">
                 Pas encore de compte ?{" "}
@@ -346,7 +335,6 @@ const AuthPages = () => {
             </div>
           </div>
         )}
-
         {/* Sign Up Page */}
         {currentPage === "signup" && (
           <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300">
@@ -360,20 +348,17 @@ const AuthPages = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-
               <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
                 <UserPlus className="w-8 h-8 text-purple-600" />
               </div>
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Créer un compte</h2>
               <p className="text-gray-600">Rejoignez notre plateforme</p>
             </div>
-
             {errors.general && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                 {errors.general}
               </div>
             )}
-
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <InputField
@@ -393,7 +378,6 @@ const AuthPages = () => {
                   error={errors.prenom}
                 />
               </div>
-
               <InputField
                 icon={Mail}
                 type="email"
@@ -403,7 +387,6 @@ const AuthPages = () => {
                 onChange={handleSignupChange}
                 error={errors.email}
               />
-
               <InputField
                 icon={Phone}
                 name="telephone"
@@ -411,7 +394,6 @@ const AuthPages = () => {
                 value={signupData.telephone}
                 onChange={handleSignupChange}
               />
-
               <InputField
                 icon={MapPin}
                 name="adresse"
@@ -419,7 +401,6 @@ const AuthPages = () => {
                 value={signupData.adresse}
                 onChange={handleSignupChange}
               />
-
               <PasswordField
                 name="password"
                 placeholder="Mot de passe"
@@ -429,7 +410,6 @@ const AuthPages = () => {
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
               />
-
               <PasswordField
                 name="confirmPassword"
                 placeholder="Confirmer le mot de passe"
@@ -439,13 +419,11 @@ const AuthPages = () => {
                 showPassword={showConfirmPassword}
                 setShowPassword={setShowConfirmPassword}
               />
-
               <div className="bg-blue-50 p-3 rounded-lg">
                 <p className="text-sm text-blue-700">
                   <span className="font-semibold">Note:</span> Votre rôle sera automatiquement défini comme "Employé"
                 </p>
               </div>
-
               <button
                 onClick={handleSignup}
                 disabled={isLoading}
@@ -461,7 +439,6 @@ const AuthPages = () => {
                 )}
               </button>
             </div>
-
             <div className="mt-6 text-center">
               <p className="text-gray-600">
                 Déjà un compte ?{" "}

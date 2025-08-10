@@ -21,6 +21,15 @@ import Erreur from './Component/Admin/Erreur';
 import ArticleE from './Component/Employee/ArticleE';
 import DemandeAchatE from './Component/Employee/DemandeAchatE';
 import AjoutDemandeAchatE from './Component/Employee/AjoutDemandeAchatE';
+import ArticleM from './Component/Manager/ArticleM';
+import DemandeAchatM from './Component/Manager/DemandeAchatM';
+import AjoutDemandeAchatM from './Component/Manager/AjoutDemandeAchatM';
+import ModifDemandeAchatM from './Component/Manager/ModifierDemandeAchatM';
+import ArticleMM from './Component/Magasinier/ArticleMM';
+import DemandeAchatMM from './Component/Magasinier/DemandeAchatMM';
+import AjoutDemandeAchatMM from './Component/Magasinier/AjoutDemandeAchatMM';
+import AjoutArticleMM from './Component/Magasinier/AjoutArticleMM';
+import ModifArticleMM from './Component/Magasinier/ModifierArticleMM';
 
 function App() {
   
@@ -35,6 +44,8 @@ function App() {
         <Route path="/ajout-article" element={<AjoutArticle />} />
         <Route path="/modif-article/:id" element={<ModifArticle />} />
 
+<Route path="/modif-articleMM/:id" element={<ModifArticleMM />} />
+
         <Route path="/demandes-achat" element={<DemandeAchat />} />
         <Route path="/ajout-demande-achat" element={<AjoutDemandeAchat />} />
         <Route path="/modif-demande-achat/:id" element={<ModifDemandeAchat />} />
@@ -47,9 +58,22 @@ function App() {
 
         <Route path="/navbar" element={<Navbar />} />
 
+        <Route path="/modif-demande-achatM/:id" element={<ModifDemandeAchatM />} />
 
+<Route path="/ajout-articleMM" element={<AjoutArticleMM />} />
+
+<Route path="/ajout-demande-achatM" element={<AjoutDemandeAchatM />} />
+
+<Route path="/ajout-demande-achatMM" element={<AjoutDemandeAchatMM />} />
 
         <Route path="/articlesE" element={<ArticleE />} />
+
+        <Route path="/articlesMM" element={<ArticleMM />} />
+
+        <Route path="/articlesM" element={<ArticleM />} />
+        <Route path="/demandes-achatM" element={<DemandeAchatM />} />
+
+        <Route path="/demandes-achatMM" element={<DemandeAchatMM />} />
 
         <Route path="/ajout-demande-achatE" element={<AjoutDemandeAchatE />} />
 

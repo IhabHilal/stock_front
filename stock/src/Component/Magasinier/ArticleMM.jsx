@@ -32,10 +32,9 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
+    
+    { name: 'Articles', icon: DocumentTextIcon, path: '/articlesMM' },
+    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achatMM' },
     { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
   ];
 
@@ -150,7 +149,7 @@ const Navbar = () => {
   );
 };
 
-export default function Article() {
+export default function ArticleMM() {
   const navigate = useNavigate()
   const [articles, setArticles] = useState([])
   const [search, setSearch] = useState("")
@@ -279,10 +278,9 @@ export default function Article() {
 
                 <nav className="p-4">
                   {[
-                    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-                    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-                    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-                    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
+                
+                    { name: 'Articles', icon: DocumentTextIcon, path: '/articlesMM' },
+                    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achatMM' },
                     { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
                   ].map((item) => (
                     <NavLink
@@ -337,7 +335,7 @@ export default function Article() {
                 </div>
                 <button
                   className="group bg-gradient-to-r from-orange-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                  onClick={() => navigate("/ajout-article")}
+                  onClick={() => navigate("/ajout-articleMM")}
                 >
                   <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
                   Ajouter un Article
@@ -478,7 +476,7 @@ export default function Article() {
                               <div className="flex items-center justify-center gap-2">
                                 <button
                                   className="group/btn bg-orange-50 hover:bg-orange-100 text-orange-600 hover:text-orange-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => navigate(`/modif-article/${article.id}`)}
+                                  onClick={() => navigate(`/modif-articleMM/${article.id}`)}
                                   title="Modifier"
                                 >
                                   <Pencil className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
@@ -492,7 +490,7 @@ export default function Article() {
                                 </button>
                                 <button
                                   className="group/btn bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => navigate(`/modif-article/${article.id}`)}
+                                  onClick={() => navigate(`/modif-articleMM/${article.id}`)}
                                   title="Modifier l'article"
                                 >
                                   <MoreVertical className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-200" />

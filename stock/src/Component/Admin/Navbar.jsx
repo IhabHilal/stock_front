@@ -94,13 +94,14 @@ const Navbar = () => {
       {/* Sidebar Desktop */}
       <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
         <div className="flex items-center justify-between p-6 border-b">
-          <div className="flex items-center">
-            <div className="bg-indigo-600 text-white p-2 rounded-lg">
-              <ChartBarIcon className="h-6 w-6" />
+            <div className="flex items-center">
+              <img 
+                src="src\Component\images\exprom.jpeg" 
+                alt="Logo" 
+                className="h-10 w-auto object-contain" 
+              />
             </div>
-            <h1 className="ml-3 text-xl font-bold text-gray-800">Panel</h1>
-          </div>
-        </div>
+           </div>
 
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           {menuItems.map((item) => (

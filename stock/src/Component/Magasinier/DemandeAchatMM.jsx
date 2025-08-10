@@ -196,7 +196,7 @@ const DetailItem = ({
   </div>
 )
 
-export default function DemandeAchatE() {
+export default function DemandeAchatMM() {
   const navigate = useNavigate()
   const [demandes, setDemandes] = useState([])
   const [search, setSearch] = useState("")
@@ -239,7 +239,7 @@ export default function DemandeAchatE() {
 
       // Filter demands by currentUser.id if currentUser is an EMPLOYEE
       const filteredByEmployee =
-        currentUser && currentUser.role === "EMPLOYEE"
+        currentUser && currentUser.role === "MAGASINIER"
           ? demandesData.filter((demande) => demande.creePar?.id === currentUser.id)
           : demandesData
 
@@ -256,12 +256,7 @@ export default function DemandeAchatE() {
     }
   }
 
-  const deleteDemande = async (id) => {
-    if (window.confirm("Voulez-vous vraiment supprimer cette demande d'achat ?")) {
-      await fetch(`http://localhost:8082/api/demandes/${id}`, { method: "DELETE" })
-      fetchDemandes()
-    }
-  }
+  
 
   // Function to open details modal
   const handleViewDetails = (demande) => {
@@ -357,8 +352,8 @@ export default function DemandeAchatE() {
   }
 
   const menuItems = [
-    { name: "Articles", icon: DocumentTextIcon, path: "/articlesE" },
-    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatE" },
+    { name: "Articles", icon: DocumentTextIcon, path: "/articlesMM" },
+    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatMM" },
     { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
   ]
 
@@ -443,7 +438,7 @@ export default function DemandeAchatE() {
                 </div>
                 <button
                   className="group bg-gradient-to-r from-cyan-600 to-teal-700 hover:from-cyan-700 hover:to-teal-800 text-white px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                  onClick={() => navigate("/ajout-demande-achatE")}
+                  onClick={() => navigate("/ajout-demande-achatMM")}
                 >
                   <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
                   Créer une Demande
@@ -632,7 +627,7 @@ export default function DemandeAchatE() {
                                 </p>
                               </div>
                               <button
-                                onClick={() => navigate("/ajout-demande-achatE")}
+                                onClick={() => navigate("/ajout-demande-achatMM")}
                                 className="bg-gradient-to-r from-cyan-600 to-teal-700 hover:from-cyan-700 hover:to-teal-800 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
                               >
                                 <Plus className="w-5 h-5" />

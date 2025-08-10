@@ -2,53 +2,42 @@
 
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { ChevronLeft, ChevronRight, Search, Package, ShoppingCart } from "lucide-react"
 import {
-  Pencil,
-  Trash2,
-  Plus,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Package,
-  MoreVertical,
-  ShoppingCart,
-} from "lucide-react"
-import { 
-  ChartBarIcon, 
-  UserGroupIcon, 
-  DocumentTextIcon, 
-  ShoppingCartIcon, 
-  UserCircleIcon, 
+  ChartBarIcon,
+  UserGroupIcon,
+  DocumentTextIcon,
+  ShoppingCartIcon,
+  UserCircleIcon,
   ArrowLeftOnRectangleIcon,
   XMarkIcon,
-  Bars3Icon
-} from '@heroicons/react/24/outline';
-import { NavLink } from 'react-router-dom';
-
+  Bars3Icon,
+} from "@heroicons/react/24/outline"
+import { NavLink } from "react-router-dom"
+// import Navbar from "./Navbar"
 
 // Composant Navbar
 const Navbar = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   const menuItems = [
-    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
-    { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
-  ];
+    { name: "Articles", icon: DocumentTextIcon, path: "/articlesM" },
+    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatM" },
+    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
+  ]
 
   const handleLogout = () => {
-    // Logique de déconnexion
-    console.log('Déconnexion effectuée');
-    navigate('/auth');
-  };
+    // Logique de déconnexion - vider le localStorage
+    localStorage.removeItem("currentUser")
+    console.log("Déconnexion effectuée")
+    navigate("/auth")
+  }
 
   return (
     <>
       {/* Bouton mobile */}
-      <button 
+      <button
         className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 rounded-lg text-white lg:hidden"
         onClick={() => setSidebarOpen(true)}
       >
@@ -56,10 +45,12 @@ const Navbar = () => {
       </button>
 
       {/* Sidebar mobile */}
-      <div className={`fixed inset-0 z-40 bg-gray-900 bg-opacity-75 transition-opacity lg:hidden ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      <div
+        className={`fixed inset-0 z-40 bg-gray-900 bg-opacity-75 transition-opacity lg:hidden ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      >
         <div className="fixed inset-0 flex">
-          <div 
-            className={`relative w-80 max-w-sm bg-white transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          <div
+            className={`relative w-80 max-w-sm bg-white transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
           >
             <div className="flex items-center justify-between p-5 border-b">
               <div className="flex items-center">
@@ -68,10 +59,7 @@ const Navbar = () => {
                 </div>
                 <h2 className="ml-3 text-l font-bold text-gray-800">Admin</h2>
               </div>
-              <button 
-                onClick={() => setSidebarOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
+              <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                 <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
@@ -81,11 +69,9 @@ const Navbar = () => {
                 <NavLink
                   key={item.name}
                   to={item.path}
-                  className={({ isActive }) => 
+                  className={({ isActive }) =>
                     `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                      isActive 
-                        ? 'bg-indigo-100 text-indigo-700 font-medium' 
-                        : 'text-gray-700 hover:bg-gray-100'
+                      isActive ? "bg-indigo-100 text-indigo-700 font-medium" : "text-gray-700 hover:bg-gray-100"
                     }`
                   }
                   onClick={() => setSidebarOpen(false)}
@@ -94,7 +80,7 @@ const Navbar = () => {
                   {item.name}
                 </NavLink>
               ))}
-              
+
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
@@ -124,11 +110,9 @@ const Navbar = () => {
             <NavLink
               key={item.name}
               to={item.path}
-              className={({ isActive }) => 
+              className={({ isActive }) =>
                 `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                  isActive 
-                    ? 'bg-indigo-100 text-indigo-700 font-medium shadow-sm' 
-                    : 'text-gray-700 hover:bg-gray-100'
+                  isActive ? "bg-indigo-100 text-indigo-700 font-medium shadow-sm" : "text-gray-700 hover:bg-gray-100"
                 }`
               }
             >
@@ -136,7 +120,7 @@ const Navbar = () => {
               {item.name}
             </NavLink>
           ))}
-          
+
           <button
             onClick={handleLogout}
             className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
@@ -147,10 +131,10 @@ const Navbar = () => {
         </nav>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default function Article() {
+export default function ArticleM() {
   const navigate = useNavigate()
   const [articles, setArticles] = useState([])
   const [search, setSearch] = useState("")
@@ -169,13 +153,6 @@ export default function Article() {
       setArticles(data)
     } catch (error) {
       console.error("Erreur lors du chargement des articles:", error)
-    }
-  }
-
-  const deleteArticle = async (id) => {
-    if (window.confirm("Voulez-vous vraiment supprimer cet article ?")) {
-      await fetch(`http://localhost:8082/api/articles/${id}`, { method: "DELETE" })
-      fetchArticles()
     }
   }
 
@@ -250,10 +227,7 @@ export default function Article() {
       {/* Contenu principal avec marge pour la navbar */}
       <div className="flex-1 flex flex-col ml-0 lg:ml-72">
         {/* Bouton mobile */}
-        <button 
-          className="lg:hidden mb-4 p-2 bg-indigo-600 rounded-lg text-white"
-          onClick={() => setSidebarOpen(true)}
-        >
+        <button className="lg:hidden mb-4 p-2 bg-indigo-600 rounded-lg text-white" onClick={() => setSidebarOpen(true)}>
           <Bars3Icon className="h-6 w-6" />
         </button>
 
@@ -269,30 +243,23 @@ export default function Article() {
                     </div>
                     <h2 className="ml-3 text-l font-bold text-gray-800">Admin</h2>
                   </div>
-                  <button 
-                    onClick={() => setSidebarOpen(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
+                  <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
 
                 <nav className="p-4">
                   {[
-                    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-                    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-                    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-                    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
-                    { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
+                    { name: "Articles", icon: DocumentTextIcon, path: "/articlesM" },
+                    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achat" },
+                    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
                   ].map((item) => (
                     <NavLink
                       key={item.name}
                       to={item.path}
-                      className={({ isActive }) => 
+                      className={({ isActive }) =>
                         `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                          isActive 
-                            ? 'bg-indigo-100 text-indigo-700 font-medium' 
-                            : 'text-gray-700 hover:bg-gray-100'
+                          isActive ? "bg-indigo-100 text-indigo-700 font-medium" : "text-gray-700 hover:bg-gray-100"
                         }`
                       }
                       onClick={() => setSidebarOpen(false)}
@@ -301,11 +268,12 @@ export default function Article() {
                       {item.name}
                     </NavLink>
                   ))}
-                  
+
                   <button
                     onClick={() => {
-                      console.log('Déconnexion effectuée');
-                      navigate('/auth');
+                      localStorage.removeItem("currentUser")
+                      console.log("Déconnexion effectuée")
+                      navigate("/auth")
                     }}
                     className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
                   >
@@ -318,9 +286,9 @@ export default function Article() {
           </div>
         )}
 
-        {/* Contenu de la page Article */}
+        {/* Contenu de la page ArticleE */}
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-100">
-          {/* Header Section */}
+          {/* Header Section - Sans bouton Ajouter */}
           <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -330,18 +298,11 @@ export default function Article() {
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                      Gestion des Articles
+                      Consultation des Articles
                     </h1>
-                    <p className="text-slate-600 mt-1">Gérer et organiser les articles du stock</p>
+                    <p className="text-slate-600 mt-1">Consulter et rechercher les articles du stock</p>
                   </div>
                 </div>
-                <button
-                  className="group bg-gradient-to-r from-orange-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                  onClick={() => navigate("/ajout-article")}
-                >
-                  <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
-                  Ajouter un Article
-                </button>
               </div>
             </div>
           </div>
@@ -382,7 +343,7 @@ export default function Article() {
             </div>
           </div>
 
-          {/* Table Section */}
+          {/* Table Section - Sans colonne Actions */}
           <div className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
             <div className="max-w-7xl mx-auto">
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
@@ -399,12 +360,10 @@ export default function Article() {
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-gray-50 to-orange-50 border-b border-gray-200/50">
                       <tr>
-                        {["Article", "Prix & Stock", "Catégorie", "État", "Actions"].map((th, i) => (
+                        {["Article", "Prix & Stock", "Catégorie", "État"].map((th, i) => (
                           <th
                             key={i}
-                            className={`px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider ${
-                              th === "Actions" ? "text-center" : ""
-                            }`}
+                            className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"
                           >
                             {th}
                           </th>
@@ -442,7 +401,9 @@ export default function Article() {
                             </td>
                             <td className="px-6 py-4">
                               <div className="space-y-1">
-                                <div className="text-lg font-bold text-gray-900">{article.prix_unitaire?.toFixed(2)} €</div>
+                                <div className="text-lg font-bold text-gray-900">
+                                  {article.prix_unitaire?.toFixed(2)} €
+                                </div>
                                 <div className={`text-sm font-medium ${stockStatus.color}`}>
                                   Stock: {article.stock} {article.unite || "unités"}
                                 </div>
@@ -462,7 +423,9 @@ export default function Article() {
                                 {article.categorie}
                               </span>
                               {article.designation && (
-                                <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">{article.designation}</div>
+                                <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
+                                  {article.designation}
+                                </div>
                               )}
                             </td>
                             <td className="px-6 py-4">
@@ -474,31 +437,6 @@ export default function Article() {
                                 {article.etat || "Non défini"}
                               </span>
                             </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center justify-center gap-2">
-                                <button
-                                  className="group/btn bg-orange-50 hover:bg-orange-100 text-orange-600 hover:text-orange-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => navigate(`/modif-article/${article.id}`)}
-                                  title="Modifier"
-                                >
-                                  <Pencil className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
-                                </button>
-                                <button
-                                  className="group/btn bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => deleteArticle(article.id)}
-                                  title="Supprimer"
-                                >
-                                  <Trash2 className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
-                                </button>
-                                <button
-                                  className="group/btn bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => navigate(`/modif-article/${article.id}`)}
-                                  title="Modifier l'article"
-                                >
-                                  <MoreVertical className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-200" />
-                                </button>
-                              </div>
-                            </td>
                           </tr>
                         )
                       })}
@@ -508,30 +446,21 @@ export default function Article() {
                         currentArticles.length < itemsPerPage &&
                         Array.from({ length: itemsPerPage - currentArticles.length }).map((_, index) => (
                           <tr key={`empty-${index}`} className="h-16">
-                            <td className="px-6 py-4" colSpan="5"></td>
+                            <td className="px-6 py-4" colSpan="4"></td>
                           </tr>
                         ))}
 
                       {filteredArticles.length === 0 && (
                         <tr>
-                          <td colSpan="5" className="px-6 py-16 text-center">
+                          <td colSpan="4" className="px-6 py-16 text-center">
                             <div className="flex flex-col items-center gap-6">
                               <div className="bg-gradient-to-br from-gray-100 to-gray-200 p-8 rounded-3xl shadow-lg">
                                 <Search className="w-16 h-16 text-gray-400" />
                               </div>
                               <div>
                                 <p className="text-xl font-bold text-gray-900 mb-2">Aucun article trouvé</p>
-                                <p className="text-gray-500">
-                                  Essayez de modifier votre recherche ou ajoutez un nouvel article
-                                </p>
+                                <p className="text-gray-500">Essayez de modifier votre recherche</p>
                               </div>
-                              <button
-                                onClick={() => navigate("/ajout-article")}
-                                className="bg-gradient-to-r from-orange-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
-                              >
-                                <Plus className="w-5 h-5" />
-                                Ajouter le premier article
-                              </button>
                             </div>
                           </td>
                         </tr>

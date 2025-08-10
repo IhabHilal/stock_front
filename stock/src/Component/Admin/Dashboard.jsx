@@ -28,6 +28,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { NavLink, useNavigate } from 'react-router-dom';
 
+
 // Service pour les appels API
 const ApiService = {
   // Récupérer le nombre d'utilisateurs
@@ -48,7 +49,7 @@ const ApiService = {
     return await response.json();
   },
 
-  // Récupérer les données mensuelles (simulé pour l'exemple)
+  // Récupérer les données mensuelles 
   async getMonthlyData() {
     // Dans une application réelle, vous auriez un endpoint comme /api/statistics/monthly
     const response = await fetch("http://localhost:8082/api/demandes"); // Utilisé comme exemple
@@ -178,15 +179,35 @@ const Navbar = () => {
       </div>
 
       {/* Sidebar Desktop - Fixe et ne défile pas */}
-      <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
+      {/* <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center">
             <div className="bg-indigo-600 text-white p-2 rounded-lg">
               <ChartBarIcon className="h-6 w-6" />
             </div>
             <h1 className="ml-3 text-xl font-bold text-gray-800">Panel</h1>
+            
           </div>
-        </div>
+        </div> */}
+
+
+        <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b">
+            <div className="flex items-center">
+              <img 
+                src="src\Component\images\exprom.jpeg" 
+                alt="Logo" 
+                className="h-10 w-auto object-contain" 
+              />
+            </div>
+           </div>
+
+
+
+
+
+
+
 
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           {menuItems.map((item) => (
