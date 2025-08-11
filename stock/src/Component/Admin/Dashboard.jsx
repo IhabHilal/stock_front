@@ -391,67 +391,67 @@ const Dashboard = () => {
         {/* Contenu du dashboard */}
         <div className="bg-gray-50 min-h-screen p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
-            <div className="mb-6 md:mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Tableau de bord</h1>
-              <p className="text-gray-600 mt-1 md:mt-2">
+            <div className="mb-8 md:mb-10">
+              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">Tableau de bord</h1>
+              <p className="text-sm md:text-base text-gray-600 mt-2">
                 Vue d'ensemble du système de gestion de stock
               </p>
             </div>
 
             {/* Cartes de statistiques */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
               {/* Carte Utilisateurs */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 border-l-4 border-blue-500">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8 min-h-[120px] md:min-h-[140px] border-l-4 border-blue-500">
                 <div className="flex items-center">
-                  <div className="bg-blue-100 p-2 md:p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 md:h-8 w-6 md:w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-blue-100 p-3 md:p-4 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 md:h-10 w-8 md:w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-base md:text-lg font-medium text-gray-500">Utilisateurs</h3>
+                    <h3 className="text-sm md:text-base font-medium text-gray-500">Utilisateurs</h3>
                     {loading ? (
                       <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mt-1"></div>
                     ) : (
-                      <p className="text-2xl md:text-3xl font-bold text-gray-800">{formatNumber(stats.users)}</p>
+                      <p className="text-3xl md:text-4xl font-bold text-gray-800">{formatNumber(stats.users)}</p>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Carte Demandes d'achat */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 border-l-4 border-green-500">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8 min-h-[120px] md:min-h-[140px] border-l-4 border-green-500">
                 <div className="flex items-center">
-                  <div className="bg-green-100 p-2 md:p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 md:h-8 w-6 md:w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-green-100 p-3 md:p-4 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 md:h-10 w-8 md:w-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-base md:text-lg font-medium text-gray-500">Demandes d'achat</h3>
+                    <h3 className="text-sm md:text-base font-medium text-gray-500">Demandes d'achat</h3>
                     {loading ? (
                       <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mt-1"></div>
                     ) : (
-                      <p className="text-2xl md:text-3xl font-bold text-gray-800">{formatNumber(stats.demands)}</p>
+                      <p className="text-3xl md:text-4xl font-bold text-gray-800">{formatNumber(stats.demands)}</p>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Carte Articles */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 border-l-4 border-purple-500">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8 min-h-[120px] md:min-h-[140px] border-l-4 border-purple-500">
                 <div className="flex items-center">
-                  <div className="bg-purple-100 p-2 md:p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 md:h-8 w-6 md:w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-purple-100 p-3 md:p-4 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 md:h-10 w-8 md:w-10 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-base md:text-lg font-medium text-gray-500">Articles</h3>
+                    <h3 className="text-sm md:text-base font-medium text-gray-500">Articles</h3>
                     {loading ? (
                       <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mt-1"></div>
                     ) : (
-                      <p className="text-2xl md:text-3xl font-bold text-gray-800">{formatNumber(stats.articles)}</p>
+                      <p className="text-3xl md:text-4xl font-bold text-gray-800">{formatNumber(stats.articles)}</p>
                     )}
                   </div>
                 </div>
@@ -465,18 +465,18 @@ const Dashboard = () => {
             )}
 
             {/* Graphiques */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               {/* Graphique en courbes - Évolution des ventes */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Évolution des ventes</h2>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 md:mb-0">Évolution des ventes</h2>
                   <div className="flex space-x-1 md:space-x-2">
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-blue-100 text-blue-700 rounded-lg">Mois</button>
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Trimestre</button>
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Année</button>
                   </div>
                 </div>
-                <div className="h-64 md:h-72">
+                <div className="h-72 md:h-80">
                   {loading ? (
                     <div className="h-full flex items-center justify-center">
                       <div className="text-gray-500">Chargement des données...</div>
@@ -485,8 +485,8 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={monthlyData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="month" stroke="#666" />
-                        <YAxis stroke="#666" />
+                        <XAxis dataKey="month" stroke="#666" tick={{ fontSize: 12, fill: '#4b5563' }} />
+                        <YAxis stroke="#666" tick={{ fontSize: 12, fill: '#4b5563' }} />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'white', 
@@ -495,7 +495,7 @@ const Dashboard = () => {
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                           }}
                         />
-                        <Legend />
+                        <Legend wrapperStyle={{ fontSize: 12, color: '#4b5563' }} />
                         <Line 
                           type="monotone" 
                           dataKey="sales" 
@@ -512,16 +512,16 @@ const Dashboard = () => {
               </div>
 
               {/* Graphique en aires - Achats mensuels */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Achats mensuels</h2>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 md:mb-0">Achats mensuels</h2>
                   <div className="flex space-x-1 md:space-x-2">
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-green-100 text-green-700 rounded-lg">Mois</button>
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Trimestre</button>
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Année</button>
                   </div>
                 </div>
-                <div className="h-64 md:h-72">
+                <div className="h-72 md:h-80">
                   {loading ? (
                     <div className="h-full flex items-center justify-center">
                       <div className="text-gray-500">Chargement des données...</div>
@@ -536,8 +536,8 @@ const Dashboard = () => {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="month" stroke="#666" />
-                        <YAxis stroke="#666" />
+                        <XAxis dataKey="month" stroke="#666" tick={{ fontSize: 12, fill: '#4b5563' }} />
+                        <YAxis stroke="#666" tick={{ fontSize: 12, fill: '#4b5563' }} />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'white', 
@@ -562,12 +562,12 @@ const Dashboard = () => {
               </div>
 
               {/* Graphique en secteurs - Répartition du stock */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Répartition du stock</h2>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 md:mb-0">Répartition du stock</h2>
                   <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-purple-100 text-purple-700 rounded-lg w-fit">Détails</button>
                 </div>
-                <div className="h-64 md:h-72">
+                <div className="h-72 md:h-80">
                   {loading ? (
                     <div className="h-full flex items-center justify-center">
                       <div className="text-gray-500">Chargement des données...</div>
@@ -602,6 +602,7 @@ const Dashboard = () => {
                           layout="vertical" 
                           verticalAlign="middle" 
                           align="right"
+                          wrapperStyle={{ fontSize: 12, color: '#4b5563' }}
                           formatter={(value, entry, index) => (
                             <span className="text-xs text-gray-600">{value}</span>
                           )}
@@ -613,16 +614,16 @@ const Dashboard = () => {
               </div>
 
               {/* Graphique en barres - Comparaison ventes/achats */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Comparaison ventes/achats</h2>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 md:mb-0">Comparaison ventes/achats</h2>
                   <div className="flex space-x-1 md:space-x-2">
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-indigo-100 text-indigo-700 rounded-lg">Mois</button>
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Trimestre</button>
                     <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Année</button>
                   </div>
                 </div>
-                <div className="h-64 md:h-72">
+                <div className="h-72 md:h-80">
                   {loading ? (
                     <div className="h-full flex items-center justify-center">
                       <div className="text-gray-500">Chargement des données...</div>
@@ -631,8 +632,8 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={monthlyData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="month" stroke="#666" />
-                        <YAxis stroke="#666" />
+                        <XAxis dataKey="month" stroke="#666" tick={{ fontSize: 12, fill: '#4b5563' }} />
+                        <YAxis stroke="#666" tick={{ fontSize: 12, fill: '#4b5563' }} />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'white', 
@@ -641,7 +642,7 @@ const Dashboard = () => {
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                           }}
                         />
-                        <Legend />
+                        <Legend wrapperStyle={{ fontSize: 12, color: '#4b5563' }} />
                         <Bar dataKey="sales" name="Ventes" fill="#8884d8" radius={[4, 4, 0, 0]} />
                         <Bar dataKey="purchases" name="Achats" fill="#82ca9d" radius={[4, 4, 0, 0]} />
                       </BarChart>
