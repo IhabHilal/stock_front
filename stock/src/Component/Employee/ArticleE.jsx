@@ -218,7 +218,7 @@ export default function ArticleE() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Barre de navigation latérale fixe */}
       <div className="fixed left-0 top-0 bottom-0 z-20">
         <Navbar />
@@ -287,7 +287,7 @@ export default function ArticleE() {
         )}
 
         {/* Contenu de la page ArticleE */}
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-100">
+        <div className="min-h-screen bg-gray-100">
           {/* Header Section - Sans bouton Ajouter */}
           <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
