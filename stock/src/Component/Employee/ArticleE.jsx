@@ -14,125 +14,7 @@ import {
   Bars3Icon,
 } from "@heroicons/react/24/outline"
 import { NavLink } from "react-router-dom"
-// import Navbar from "./Navbar"
-
-// Composant Navbar
-const Navbar = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const navigate = useNavigate()
-
-  const menuItems = [
-    { name: "Articles", icon: DocumentTextIcon, path: "/articlesE" },
-    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatE" },
-    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
-  ]
-
-  const handleLogout = () => {
-    // Logique de déconnexion - vider le localStorage
-    localStorage.removeItem("currentUser")
-    console.log("Déconnexion effectuée")
-    navigate("/auth")
-  }
-
-  return (
-    <>
-      {/* Bouton mobile */}
-      <button
-        className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 rounded-lg text-white lg:hidden"
-        onClick={() => setSidebarOpen(true)}
-      >
-        <Bars3Icon className="h-6 w-6" />
-      </button>
-
-      {/* Sidebar mobile */}
-      <div
-        className={`fixed inset-0 z-40 bg-gray-900 bg-opacity-75 transition-opacity lg:hidden ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-      >
-        <div className="fixed inset-0 flex">
-          <div
-            className={`relative w-80 max-w-sm bg-white transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-          >
-            <div className="flex items-center justify-between p-5 border-b">
-              <div className="flex items-center">
-                <div className="bg-indigo-600 text-white p-2 rounded-lg">
-                  <ChartBarIcon className="h-6 w-6" />
-                </div>
-                <h2 className="ml-3 text-l font-bold text-gray-800">Admin</h2>
-              </div>
-              <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-
-            <nav className="p-4">
-              {menuItems.map((item) => (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                      isActive ? "bg-indigo-100 text-indigo-700 font-medium" : "text-gray-700 hover:bg-gray-100"
-                    }`
-                  }
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  {item.name}
-                </NavLink>
-              ))}
-
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
-              >
-                <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3" />
-                LogOut
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
-
-      {/* Sidebar Desktop - Fixe et ne défile pas */}
-      <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
-        <div className="flex items-center justify-between p-6 border-b">
-            <div className="flex items-center">
-              <img 
-                src="src\Component\images\exprom.jpeg" 
-                alt="Logo" 
-                className="h-10 w-auto object-contain" 
-              />
-            </div>
-           </div>
-
-        <nav className="flex-1 px-4 py-6 overflow-y-auto">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                  isActive ? "bg-indigo-100 text-indigo-700 font-medium shadow-sm" : "text-gray-700 hover:bg-gray-100"
-                }`
-              }
-            >
-              <item.icon className="h-5 w-5 mr-3" />
-              {item.name}
-            </NavLink>
-          ))}
-
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
-          >
-            <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3" />
-            LogOut
-          </button>
-        </nav>
-      </div>
-    </>
-  )
-}
+ import NavbarE from "./NavbarE"
 
 export default function ArticleE() {
   const navigate = useNavigate()
@@ -218,10 +100,10 @@ export default function ArticleE() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen  ">
       {/* Barre de navigation latérale fixe */}
-      <div className="fixed left-0 top-0 bottom-0 z-20">
-        <Navbar />
+      <div className="fixed left-0 top-0 bottom-0 z-20  ">
+        <NavbarE />
       </div>
 
       {/* Contenu principal avec marge pour la navbar */}
@@ -287,7 +169,8 @@ export default function ArticleE() {
         )}
 
         {/* Contenu de la page ArticleE */}
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-100">
+        {/* <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-100"> */}
+        <div className="min-h-screen ">
           {/* Header Section - Sans bouton Ajouter */}
           <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

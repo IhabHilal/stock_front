@@ -1,323 +1,202 @@
-import React, { useState, useEffect } from "react";
+"use client"
+
+import { useState, useEffect } from "react"
 import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-} from "recharts";
-import { 
-  ChartBarIcon, 
-  UserGroupIcon, 
-  DocumentTextIcon, 
-  ShoppingCartIcon, 
-  UserCircleIcon, 
-  ArrowLeftOnRectangleIcon,
-  XMarkIcon,
-  Bars3Icon
-} from '@heroicons/react/24/outline';
-import { NavLink, useNavigate } from 'react-router-dom';
-
+} from "recharts"
+import Navbar from "./Navbar"
+import { useNavigate } from "react-router-dom"
 
 // Service pour les appels API
 const ApiService = {
-  // Récupérer le nombre d'utilisateurs
   async getUsersCount() {
-    const response = await fetch("http://localhost:8082/api/utilisateurs/count");
-    return await response.json();
+    const response = await fetch("http://localhost:8082/api/utilisateurs/count")
+    return await response.json()
   },
 
-  // Récupérer le nombre de demandes
   async getDemandsCount() {
-    const response = await fetch("http://localhost:8082/api/demandes/count");
-    return await response.json();
+    const response = await fetch("http://localhost:8082/api/demandes/count")
+    return await response.json()
   },
 
-  // Récupérer le nombre d'articles
   async getArticlesCount() {
-    const response = await fetch("http://localhost:8082/api/articles/count");
-    return await response.json();
+    const response = await fetch("http://localhost:8082/api/articles/count")
+    return await response.json()
   },
 
-  // Récupérer les données mensuelles 
-  async getMonthlyData() {
-    // Dans une application réelle, vous auriez un endpoint comme /api/statistics/monthly
-    const response = await fetch("http://localhost:8082/api/demandes"); // Utilisé comme exemple
-    const allData = await response.json();
-    
-    // Simulation de transformation des données en données mensuelles
-    return [
-      { month: "Jan", sales: 420, purchases: 250, demands: allData.length > 0 ? allData.length * 1.2 : 120 },
-      { month: "Fév", sales: 320, purchases: 149, demands: allData.length > 0 ? allData.length * 1.5 : 150 },
-      { month: "Mar", sales: 210, purchases: 990, demands: allData.length > 0 ? allData.length * 1.8 : 180 },
-      { month: "Avr", sales: 298, purchases: 410, demands: allData.length > 0 ? allData.length * 1.3 : 130 },
-      { month: "Mai", sales: 199, purchases: 490, demands: allData.length > 0 ? allData.length * 1.1 : 110 },
-      { month: "Juin", sales: 320, purchases: 380, demands: allData.length > 0 ? allData.length * 1.4 : 140 },
-      { month: "Juil", sales: 410, purchases: 320, demands: allData.length > 0 ? allData.length * 1.6 : 160 },
-      { month: "Août", sales: 380, purchases: 410, demands: allData.length > 0 ? allData.length * 1.3 : 130 },
-      { month: "Sep", sales: 490, purchases: 280, demands: allData.length > 0 ? allData.length * 1.7 : 170 },
-      { month: "Oct", sales: 520, purchases: 510, demands: allData.length > 0 ? allData.length * 1.9 : 190 },
-      { month: "Nov", sales: 450, purchases: 390, demands: allData.length > 0 ? allData.length * 1.5 : 150 },
-      { month: "Déc", sales: 610, purchases: 480, demands: allData.length > 0 ? allData.length * 2.0 : 200 },
-    ];
+  // Nouvelles méthodes pour récupérer les données réelles
+  async getDemandsData() {
+    const response = await fetch("http://localhost:8082/api/demandes")
+    return await response.json()
   },
 
-  // Récupérer les données de stock (simulé pour l'exemple)
-  async getStockData() {
-    // Dans une application réelle, vous auriez un endpoint comme /api/stocks/distribution
-    const response = await fetch("http://localhost:8082/api/articles");
-    const articles = await response.json();
-    
-    // Simulation de données de stock basées sur les articles
-    if (articles.length > 0) {
-      return [
-        { name: "Électronique", value: articles.length * 25 },
-        { name: "Mobilier", value: articles.length * 15 },
-        { name: "Fournitures", value: articles.length * 40 },
-        { name: "Matériel", value: articles.length * 20 },
-      ];
-    }
-    
-    // Valeurs par défaut si aucun article
-    return [
-      { name: "Électronique", value: 400 },
-      { name: "Mobilier", value: 300 },
-      { name: "Fournitures", value: 300 },
-      { name: "Matériel", value: 200 },
-    ];
-  }
-};
+  async getArticlesData() {
+    const response = await fetch("http://localhost:8082/api/articles")
+    return await response.json()
+  },
 
-const Navbar = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const menuItems = [
-    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
-    { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
-  ];
-
-  const handleLogout = () => {
-    // Logique de déconnexion
-    console.log('Déconnexion effectuée');
-    navigate('/auth');
-  };
-
-  return (
-    <>
-      {/* Bouton mobile */}
-      <button 
-        className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 rounded-lg text-white lg:hidden"
-        onClick={() => setSidebarOpen(true)}
-      >
-        <Bars3Icon className="h-6 w-6" />
-      </button>
-
-      {/* Sidebar mobile */}
-      <div className={`fixed inset-0 z-40 bg-gray-900 bg-opacity-75 transition-opacity lg:hidden ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <div className="fixed inset-0 flex">
-          <div 
-            className={`relative w-80 max-w-sm bg-white transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-          >
-            <div className="flex items-center justify-between p-5 border-b">
-              <div className="flex items-center">
-                <div className="bg-indigo-600 text-white p-2 rounded-lg">
-                  <ChartBarIcon className="h-6 w-6" />
-                </div>
-                <h2 className="ml-3 text-l font-bold text-gray-800">Admin</h2>
-              </div>
-              <button 
-                onClick={() => setSidebarOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-
-            <nav className="p-4">
-              {menuItems.map((item) => (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  className={({ isActive }) => 
-                    `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                      isActive 
-                        ? 'bg-indigo-100 text-indigo-700 font-medium' 
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`
-                  }
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  {item.name}
-                </NavLink>
-              ))}
-              
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
-              >
-                <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3" />
-                LogOut
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
-
-      {/* Sidebar Desktop - Fixe et ne défile pas */}
-      {/* <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
-        <div className="flex items-center justify-between p-6 border-b">
-          <div className="flex items-center">
-            <div className="bg-indigo-600 text-white p-2 rounded-lg">
-              <ChartBarIcon className="h-6 w-6" />
-            </div>
-            <h1 className="ml-3 text-xl font-bold text-gray-800">Panel</h1>
-            
-          </div>
-        </div> */}
-
-
-        <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
-          <div className="flex items-center justify-between p-6 border-b">
-            <div className="flex items-center">
-              <img 
-                src="src\Component\images\exprom.jpeg" 
-                alt="Logo" 
-                className="h-10 w-auto object-contain" 
-              />
-            </div>
-           </div>
-
-
-
-
-
-
-
-
-        <nav className="flex-1 px-4 py-6 overflow-y-auto">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                  isActive 
-                    ? 'bg-indigo-100 text-indigo-700 font-medium shadow-sm' 
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`
-              }
-            >
-              <item.icon className="h-5 w-5 mr-3" />
-              {item.name}
-            </NavLink>
-          ))}
-          
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
-          >
-            <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3" />
-            LogOut
-          </button>
-        </nav>
-      </div>
-    </>
-  );
-};
+  async getUsersData() {
+    const response = await fetch("http://localhost:8082/api/utilisateurs")
+    return await response.json()
+  },
+}
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
     users: 0,
     demands: 0,
-    articles: 0
-  });
-  
-  const [monthlyData, setMonthlyData] = useState([]);
-  const [stockData, setStockData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
+    articles: 0,
+  })
 
-  // Récupérer les données via les API
+  // Nouveaux états pour les données réelles
+  const [demandsValidationData, setDemandsValidationData] = useState([])
+  const [articlesStockData, setArticlesStockData] = useState([])
+  const [articlesCategoryData, setArticlesCategoryData] = useState([])
+  const [usersRoleData, setUsersRoleData] = useState([])
+
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
+
+  // Fonction pour traiter les données des demandes par validation
+  const processDemandsValidationData = (demands) => {
+    const validationCounts = { V: 0, NV: 0, "PAS ENCORE": 0 }
+
+    demands.forEach((demand) => {
+      if (demand.validation === "V") validationCounts.V++
+      else if (demand.validation === "NV") validationCounts.NV++
+      else validationCounts["PAS ENCORE"]++
+    })
+
+    return [
+      { name: "V", value: validationCounts.V, color: "#10B981" },
+      { name: "NV ", value: validationCounts.NV, color: "#EF4444" },
+      { name: "En Attente", value: validationCounts["PAS ENCORE"], color: "#F59E0B" },
+    ]
+  }
+
+  // Fonction pour traiter les données des articles par catégorie
+  const processArticlesCategoryData = (articles) => {
+    const categoryCount = {}
+
+    articles.forEach((article) => {
+      const category = article.categorie || "Non définie"
+      categoryCount[category] = (categoryCount[category] || 0) + 1
+    })
+
+    return Object.entries(categoryCount).map(([name, value]) => ({
+      name,
+      value,
+    }))
+  }
+
+  // Fonction pour traiter les données de stock des articles
+  const processArticlesStockData = (articles) => {
+    const stockLevels = { "Stock Faible": 0, "Stock Moyen": 0, "Stock Bon": 0 }
+
+    articles.forEach((article) => {
+      const stock = article.stock || 0
+      if (stock <= 5) stockLevels["Stock Faible"]++
+      else if (stock <= 20) stockLevels["Stock Moyen"]++
+      else stockLevels["Stock Bon"]++
+    })
+
+    return [
+      { name: "Faible", value: stockLevels["Stock Faible"], color: "#EF4444" },
+      { name: "Moyen", value: stockLevels["Stock Moyen"], color: "#F59E0B" },
+      { name: "Bon", value: stockLevels["Stock Bon"], color: "#10B981" },
+    ]
+  }
+
+  // Fonction pour traiter les données des utilisateurs par rôle
+  const processUsersRoleData = (users) => {
+    const roleCount = {}
+
+    users.forEach((user) => {
+      const role = user.role || "Non défini"
+      roleCount[role] = (roleCount[role] || 0) + 1
+    })
+
+    return Object.entries(roleCount).map(([name, value]) => ({
+      name,
+      value,
+    }))
+  }
+
+  // Récupérer toutes les données réelles
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        
-        // Récupérer les comptes en parallèle
+        setLoading(true)
+
+        // Récupérer les compteurs
         const [usersCount, demandsCount, articlesCount] = await Promise.all([
           ApiService.getUsersCount(),
           ApiService.getDemandsCount(),
-          ApiService.getArticlesCount()
-        ]);
-        
-        // Récupérer les données mensuelles et de stock
-        const [monthly, stock] = await Promise.all([
-          ApiService.getMonthlyData(),
-          ApiService.getStockData()
-        ]);
-        
+          ApiService.getArticlesCount(),
+        ])
+
+        // Récupérer les données détaillées
+        const [demandsData, articlesData, usersData] = await Promise.all([
+          ApiService.getDemandsData(),
+          ApiService.getArticlesData(),
+          ApiService.getUsersData(),
+        ])
+
         setStats({
           users: usersCount,
           demands: demandsCount,
-          articles: articlesCount
-        });
-        
-        setMonthlyData(monthly);
-        setStockData(stock);
-        setLoading(false);
+          articles: articlesCount,
+        })
+
+        // Traiter les données pour les graphiques
+        setDemandsValidationData(processDemandsValidationData(demandsData))
+        setArticlesCategoryData(processArticlesCategoryData(articlesData))
+        setArticlesStockData(processArticlesStockData(articlesData))
+        setUsersRoleData(processUsersRoleData(usersData))
+
+        setLoading(false)
       } catch (err) {
-        setError("Erreur lors du chargement des données. Veuillez réessayer.");
-        setLoading(false);
-        console.error(err);
+        setError("Erreur lors du chargement des données. Veuillez réessayer.")
+        setLoading(false)
+        console.error(err)
       }
-    };
+    }
 
-    fetchData();
-    
-    // Rafraîchir les données toutes les 5 minutes
-    const interval = setInterval(fetchData, 300000);
-    return () => clearInterval(interval);
-  }, []);
+    fetchData()
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d"];
+    // Actualiser les données toutes les 5 minutes
+    const interval = setInterval(fetchData, 300000)
+    return () => clearInterval(interval)
+  }, [])
 
-  // Fonction pour formater les grands nombres
   const formatNumber = (num) => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num;
-  };
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
+    return num
+  }
 
-  const menuItems = [
-    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
-    { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
-  ];
-
-  const handleLogout = () => {
-    // Logique de déconnexion
-    console.log('Déconnexion effectuée');
-    navigate('/auth');
-  };
+  // Composant personnalisé pour les tooltips
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+          <p className="text-gray-800 font-medium">{`${payload[0].name}: ${payload[0].value}`}</p>
+        </div>
+      )
+    }
+    return null
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -328,74 +207,12 @@ const Dashboard = () => {
 
       {/* Contenu principal avec marge pour la navbar */}
       <div className="flex-1 flex flex-col ml-0 lg:ml-72">
-        {/* Bouton mobile */}
-        <button 
-          className="lg:hidden mb-4 p-2 bg-indigo-600 rounded-lg text-white"
-          onClick={() => setSidebarOpen(true)}
-        >
-          <Bars3Icon className="h-6 w-6" />
-        </button>
-
-        {/* Sidebar mobile */}
-        {sidebarOpen && (
-          <div className="fixed inset-0 z-40 bg-gray-900 bg-opacity-75 lg:hidden">
-            <div className="fixed inset-0 flex">
-              <div className="relative w-80 max-w-sm bg-white transform transition-transform duration-300 ease-in-out">
-                <div className="flex items-center justify-between p-5 border-b">
-                  <div className="flex items-center">
-                    <div className="bg-indigo-600 text-white p-2 rounded-lg">
-                      <ChartBarIcon className="h-6 w-6" />
-                    </div>
-                    <h2 className="ml-3 text-l font-bold text-gray-800">Admin</h2>
-                  </div>
-                  <button 
-                    onClick={() => setSidebarOpen(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    <XMarkIcon className="h-6 w-6" />
-                  </button>
-                </div>
-
-                <nav className="p-4">
-                  {menuItems.map((item) => (
-                    <NavLink
-                      key={item.name}
-                      to={item.path}
-                      className={({ isActive }) => 
-                        `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                          isActive 
-                            ? 'bg-indigo-100 text-indigo-700 font-medium' 
-                            : 'text-gray-700 hover:bg-gray-100'
-                        }`
-                      }
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      <item.icon className="h-5 w-5 mr-3" />
-                      {item.name}
-                    </NavLink>
-                  ))}
-                  
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                  >
-                    <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3" />
-                    LogOut
-                  </button>
-                </nav>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Contenu du dashboard */}
-        <div className="bg-gray-50 min-h-screen p-4 md:p-6">
+        <div className="min-h-screen p-4 md:p-6 ">
           <div className="max-w-7xl mx-auto">
             <div className="mb-6 md:mb-8">
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Tableau de bord</h1>
-              <p className="text-gray-600 mt-1 md:mt-2">
-                Vue d'ensemble du système de gestion de stock
-              </p>
+              <p className="text-gray-600 mt-1 md:mt-2">Vue d'ensemble du système de gestion de stock</p>
             </div>
 
             {/* Cartes de statistiques */}
@@ -404,8 +221,19 @@ const Dashboard = () => {
               <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 border-l-4 border-blue-500">
                 <div className="flex items-center">
                   <div className="bg-blue-100 p-2 md:p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 md:h-8 w-6 md:w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 md:h-8 w-6 md:w-8 text-blue-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
                     </svg>
                   </div>
                   <div className="ml-4">
@@ -423,8 +251,19 @@ const Dashboard = () => {
               <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 border-l-4 border-green-500">
                 <div className="flex items-center">
                   <div className="bg-green-100 p-2 md:p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 md:h-8 w-6 md:w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 md:h-8 w-6 md:w-8 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
                     </svg>
                   </div>
                   <div className="ml-4">
@@ -442,8 +281,19 @@ const Dashboard = () => {
               <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 border-l-4 border-purple-500">
                 <div className="flex items-center">
                   <div className="bg-purple-100 p-2 md:p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 md:h-8 w-6 md:w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 md:h-8 w-6 md:w-8 text-purple-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                      />
                     </svg>
                   </div>
                   <div className="ml-4">
@@ -458,114 +308,14 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl">
-                {error}
-              </div>
-            )}
+            {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl">{error}</div>}
 
-            {/* Graphiques */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-              {/* Graphique en courbes - Évolution des ventes */}
+              {/* Graphique 1: Validation des demandes */}
               <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Évolution des ventes</h2>
-                  <div className="flex space-x-1 md:space-x-2">
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-blue-100 text-blue-700 rounded-lg">Mois</button>
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Trimestre</button>
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Année</button>
-                  </div>
-                </div>
-                <div className="h-64 md:h-72">
-                  {loading ? (
-                    <div className="h-full flex items-center justify-center">
-                      <div className="text-gray-500">Chargement des données...</div>
-                    </div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={monthlyData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="month" stroke="#666" />
-                        <YAxis stroke="#666" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            borderRadius: '8px',
-                            border: '1px solid #e2e8f0',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                          }}
-                        />
-                        <Legend />
-                        <Line 
-                          type="monotone" 
-                          dataKey="sales" 
-                          name="Ventes"
-                          stroke="#8884d8" 
-                          strokeWidth={3}
-                          dot={{ r: 6, strokeWidth: 2, stroke: '#8884d8', fill: 'white' }}
-                          activeDot={{ r: 8, stroke: '#8884d8', strokeWidth: 2, fill: 'white' }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-              </div>
-
-              {/* Graphique en aires - Achats mensuels */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Achats mensuels</h2>
-                  <div className="flex space-x-1 md:space-x-2">
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-green-100 text-green-700 rounded-lg">Mois</button>
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Trimestre</button>
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Année</button>
-                  </div>
-                </div>
-                <div className="h-64 md:h-72">
-                  {loading ? (
-                    <div className="h-full flex items-center justify-center">
-                      <div className="text-gray-500">Chargement des données...</div>
-                    </div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={monthlyData}>
-                        <defs>
-                          <linearGradient id="colorPurchases" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="month" stroke="#666" />
-                        <YAxis stroke="#666" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            borderRadius: '8px',
-                            border: '1px solid #e2e8f0',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="purchases"
-                          name="Achats"
-                          stroke="#82ca9d"
-                          strokeWidth={3}
-                          fillOpacity={1}
-                          fill="url(#colorPurchases)"
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-              </div>
-
-              {/* Graphique en secteurs - Répartition du stock */}
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Répartition du stock</h2>
-                  <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-purple-100 text-purple-700 rounded-lg w-fit">Détails</button>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-800">État des Demandes</h2>
+                  <div className="text-sm text-gray-500">Total: {stats.demands}</div>
                 </div>
                 <div className="h-64 md:h-72">
                   {loading ? (
@@ -576,35 +326,26 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
-                          data={stockData}
+                          data={demandsValidationData}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={70}
-                          innerRadius={40}
+                          label={({ name, percent, value }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                          outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
+                          fontSize={12}
+                          fontWeight="bold"
                         >
-                          {stockData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          {demandsValidationData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
                           ))}
                         </Pie>
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            borderRadius: '8px',
-                            border: '1px solid #e2e8f0',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                          }}
-                        />
-                        <Legend 
-                          layout="vertical" 
-                          verticalAlign="middle" 
-                          align="right"
-                          formatter={(value, entry, index) => (
-                            <span className="text-xs text-gray-600">{value}</span>
-                          )}
+                        <Tooltip content={<CustomTooltip />} />
+                        <Legend
+                          verticalAlign="bottom"
+                          height={36}
+                          formatter={(value, entry) => `${value}: ${entry.payload.value}`}
                         />
                       </PieChart>
                     </ResponsiveContainer>
@@ -612,15 +353,11 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Graphique en barres - Comparaison ventes/achats */}
+              {/* Graphique 2: Répartition des articles par catégorie */}
               <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-0">Comparaison ventes/achats</h2>
-                  <div className="flex space-x-1 md:space-x-2">
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-indigo-100 text-indigo-700 rounded-lg">Mois</button>
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Trimestre</button>
-                    <button className="px-2 md:px-3 py-1 text-xs md:text-sm bg-gray-100 text-gray-700 rounded-lg">Année</button>
-                  </div>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-800">Articles par Catégorie</h2>
+                  <div className="text-sm text-gray-500">Total: {stats.articles}</div>
                 </div>
                 <div className="h-64 md:h-72">
                   {loading ? (
@@ -629,21 +366,108 @@ const Dashboard = () => {
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={monthlyData}>
+                      <BarChart data={articlesCategoryData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey="month" stroke="#666" />
-                        <YAxis stroke="#666" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            borderRadius: '8px',
-                            border: '1px solid #e2e8f0',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                          }}
+                        <XAxis
+                          dataKey="name"
+                          stroke="#666"
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                          fontSize={11}
+                          interval={0}
                         />
-                        <Legend />
-                        <Bar dataKey="sales" name="Ventes" fill="#8884d8" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="purchases" name="Achats" fill="#82ca9d" radius={[4, 4, 0, 0]} />
+                        <YAxis stroke="#666" />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar dataKey="value" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+              </div>
+
+              {/* Graphique 3: État du stock */}
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-800">État du Stock</h2>
+                  <div className="text-sm text-gray-500">Articles: {stats.articles}</div>
+                </div>
+                <div className="h-64 md:h-72">
+                  {loading ? (
+                    <div className="h-full flex items-center justify-center">
+                      <div className="text-gray-500">Chargement des données...</div>
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={articlesStockData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, percent, value }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                          outerRadius={80}
+                          innerRadius={40}
+                          fill="#8884d8"
+                          dataKey="value"
+                          fontSize={12}
+                          fontWeight="bold"
+                        >
+                          {articlesStockData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip content={<CustomTooltip />} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+                {!loading && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="flex flex-wrap justify-center gap-4 text-sm">
+                      {articlesStockData.map((item, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: item.color }}></div>
+                          <span className="text-gray-600">
+                            {item.name}:{" "}
+                            <span className="font-medium" style={{ color: item.color }}>
+                              {item.value}
+                            </span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Graphique 4: Répartition des utilisateurs par rôle */}
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-800">Utilisateurs par Rôle</h2>
+                  <div className="text-sm text-gray-500">Total: {stats.users}</div>
+                </div>
+                <div className="h-64 md:h-72">
+                  {loading ? (
+                    <div className="h-full flex items-center justify-center">
+                      <div className="text-gray-500">Chargement des données...</div>
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={usersRoleData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                        <XAxis
+                          dataKey="name"
+                          stroke="#666"
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                          fontSize={11}
+                          interval={0}
+                        />
+                        <YAxis stroke="#666" />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar dataKey="value" fill="#3B82F6" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   )}
@@ -654,81 +478,130 @@ const Dashboard = () => {
             {/* Section de statistiques supplémentaires */}
             <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Dernières demandes</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Résumé des Validations</h3>
                 <div className="space-y-3">
-                  {loading ? (
-                    Array(3).fill(0).map((_, i) => (
-                      <div key={i} className="flex justify-between items-center">
-                        <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-                      </div>
-                    ))
-                  ) : stats.demands > 0 ? (
-                    <>
-                      <div className="flex justify-between items-center pb-2 border-b">
-                        <span className="text-gray-600">Demande #DA-001</span>
-                        <span className="text-sm font-medium text-green-600">Approuvé</span>
-                      </div>
-                      <div className="flex justify-between items-center pb-2 border-b">
-                        <span className="text-gray-600">Demande #DA-002</span>
-                        <span className="text-sm font-medium text-yellow-600">En attente</span>
-                      </div>
-                      <div className="flex justify-between items-center pb-2 border-b">
-                        <span className="text-gray-600">Demande #DA-003</span>
-                        <span className="text-sm font-medium text-red-600">Rejeté</span>
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-gray-500 text-center py-4">Aucune demande récente</p>
-                  )}
+                  {loading
+                    ? Array(3)
+                        .fill(0)
+                        .map((_, i) => (
+                          <div key={i} className="flex justify-between items-center">
+                            <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                          </div>
+                        ))
+                    : demandsValidationData.map((item, index) => (
+                        <div key={index} className="flex justify-between items-center pb-2 border-b">
+                          <span className="text-gray-600">{item.name}:</span>
+                          <span className="text-sm font-medium" style={{ color: item.color }}>
+                            {item.value}
+                          </span>
+                        </div>
+                      ))}
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6 md:col-span-2">
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">État du Stock</h3>
+                <div className="space-y-3">
+                  {loading
+                    ? Array(3)
+                        .fill(0)
+                        .map((_, i) => (
+                          <div key={i} className="flex justify-between items-center">
+                            <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                          </div>
+                        ))
+                    : articlesStockData.map((item, index) => (
+                        <div key={index} className="flex justify-between items-center pb-2 border-b">
+                          <span className="text-gray-600">{item.name}:</span>
+                          <span className="text-sm font-medium" style={{ color: item.color }}>
+                            {item.value}
+                          </span>
+                        </div>
+                      ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 md:p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Activité récente</h3>
                 <div className="space-y-3">
                   {loading ? (
-                    Array(4).fill(0).map((_, i) => (
-                      <div key={i} className="flex items-center">
-                        <div className="h-10 w-10 bg-gray-200 rounded-full mr-3 animate-pulse"></div>
-                        <div className="flex-1">
-                          <div className="h-4 bg-gray-200 rounded w-3/4 mb-1 animate-pulse"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                    Array(4)
+                      .fill(0)
+                      .map((_, i) => (
+                        <div key={i} className="flex items-center">
+                          <div className="h-10 w-10 bg-gray-200 rounded-full mr-3 animate-pulse"></div>
+                          <div className="flex-1">
+                            <div className="h-4 bg-gray-200 rounded w-3/4 mb-1 animate-pulse"></div>
+                            <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))
                   ) : (
                     <>
                       <div className="flex items-center">
                         <div className="bg-blue-100 p-2 rounded-full mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 text-blue-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                            />
                           </svg>
                         </div>
                         <div>
-                          <p className="text-gray-800">Nouvel article ajouté</p>
-                          <p className="text-xs text-gray-500">Il y a 2 heures</p>
+                          <p className="text-gray-800">Données mises à jour</p>
+                          <p className="text-xs text-gray-500">Maintenant</p>
                         </div>
                       </div>
                       <div className="flex items-center">
                         <div className="bg-green-100 p-2 rounded-full mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 text-green-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                            />
                           </svg>
                         </div>
                         <div>
-                          <p className="text-gray-800">Demande d'achat approuvée</p>
-                          <p className="text-xs text-gray-500">Aujourd'hui, 09:45</p>
+                          <p className="text-gray-800">Statistiques calculées</p>
+                          <p className="text-xs text-gray-500">Il y a 1 minute</p>
                         </div>
                       </div>
                       <div className="flex items-center">
                         <div className="bg-purple-100 p-2 rounded-full mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 text-purple-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                            />
                           </svg>
                         </div>
                         <div>
-                          <p className="text-gray-800">Nouvel utilisateur enregistré</p>
-                          <p className="text-xs text-gray-500">Hier, 16:30</p>
+                          <p className="text-gray-800">Graphiques générés</p>
+                          <p className="text-xs text-gray-500">Il y a 2 minutes</p>
                         </div>
                       </div>
                     </>
@@ -740,7 +613,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

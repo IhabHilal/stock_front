@@ -30,6 +30,9 @@ import DemandeAchatMM from './Component/Magasinier/DemandeAchatMM';
 import AjoutDemandeAchatMM from './Component/Magasinier/AjoutDemandeAchatMM';
 import AjoutArticleMM from './Component/Magasinier/AjoutArticleMM';
 import ModifArticleMM from './Component/Magasinier/ModifierArticleMM';
+import NavbarE from './Component/Employee/NavbarE';
+import NavbarM from './Component/Manager/NavbarM';
+import NavbarMM from './Component/Magasinier/NavbarMM';
 
 function App() {
   
@@ -57,6 +60,13 @@ function App() {
         <Route path="/prof-admin" element={<Profile />} />
 
         <Route path="/navbar" element={<Navbar />} />
+
+<Route path="/navbarE" element={<NavbarE />} />
+
+<Route path="/navbarM" element={<NavbarM />} />
+<Route path="/navbarMM" element={<NavbarMM />} />
+
+
 
         <Route path="/modif-demande-achatM/:id" element={<ModifDemandeAchatM />} />
 

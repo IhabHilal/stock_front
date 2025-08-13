@@ -16,11 +16,13 @@ import {
   Shield,
   ArrowLeft,
   AlertCircle,
+  Building2,
+  BadgeCheck,
 } from "lucide-react"
-import { useNavigate } from "react-router-dom" // Import useNavigate
+import { useNavigate } from "react-router-dom"
 
 const ProfilePage = () => {
-  const navigate = useNavigate() // Initialize useNavigate
+  const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -61,11 +63,10 @@ const ProfilePage = () => {
     if (currentUser) {
       loadUserData()
     } else {
-      // Rediriger vers la page de connexion si pas d'utilisateur connecté
       alert("Vous devez être connecté pour accéder à cette page")
-      navigate("/auth") // Use navigate for redirection
+      navigate("/auth")
     }
-  }, [currentUser, navigate]) // Add navigate to dependency array
+  }, [currentUser, navigate])
 
   const loadUserData = async () => {
     try {
@@ -150,7 +151,7 @@ const ProfilePage = () => {
         telephone: formData.telephone.trim() || null,
         adresse: formData.adresse.trim() || null,
         password: formData.newPassword.trim() || user.password,
-        role: user.role, // Garder le rôle existant
+        role: user.role,
       }
 
       const response = await fetch(`${API_BASE_URL}/utilisateurs/${currentUser.id}`, {
@@ -232,289 +233,398 @@ const ProfilePage = () => {
     setIsEditing(false)
   }
 
+  // Fonction pour obtenir la couleur du badge selon le rôle - COULEURS AUTHPAGES
+  const getRoleBadge = (role) => {
+    const roles = {
+      ADMIN: { color: "from-gray-700 to-yellow-600", text: "Administrateur", icon: Shield },
+      MANAGER: { color: "from-gray-700 to-yellow-600", text: "Manager", icon: BadgeCheck },
+      EMPLOYEE: { color: "from-gray-700 to-yellow-600", text: "Employé", icon: User },
+      MAGASINIER: { color: "from-gray-700 to-yellow-600", text: "Magasinier", icon: Building2 },
+    }
+    return roles[role] || roles.EMPLOYEE
+  }
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Chargement du profil...</p>
+      <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 via-stone-50 to-yellow-100 flex items-center justify-center p-4 fixed inset-0 overflow-auto">
+        <div className="text-center bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
+          <div className="w-16 h-16 border-4 border-yellow-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-700 text-lg font-semibold">Chargement du profil...</p>
+          <p className="text-slate-500 text-sm mt-2">Récupération de vos informations</p>
         </div>
       </div>
     )
   }
 
+  const roleBadge = getRoleBadge(user?.role)
+  const RoleIcon = roleBadge.icon
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
+    <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 via-stone-50 to-yellow-100 p-4 fixed inset-0 overflow-auto">
+      <div className="max-w-5xl mx-auto">
+        {/* Header avec navigation */}
         <div className="mb-8">
           <button
-            onClick={() => navigate(-1)} // Use navigate(-1) to go back
-            className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-4 transition-colors group"
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center text-slate-600 hover:text-yellow-700 mb-6 transition-all duration-300 group bg-white rounded-xl px-4 py-2 shadow-md hover:shadow-lg"
           >
             <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
-            Retour
+            <span className="font-medium">Retour</span>
           </button>
 
-          <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200/50">
-            <div className="flex flex-col md:flex-row items-center md:justify-between gap-6">
-              <div className="flex items-center space-x-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                  <UserCircle className="w-14 h-14 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-800">
-                    {user?.prenom} {user?.nom}
-                  </h1>
-                  <div className="flex items-center mt-2">
-                    <Shield className="w-5 h-5 text-gray-500 mr-2" />
-                    <span className="text-gray-600 capitalize bg-gray-100 px-3 py-1 rounded-full text-sm font-medium">
-                      {user?.role?.toLowerCase()}
-                    </span>
+          {/* En-tête du profil avec design professionnel inspiré de l'image */}
+          <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/50 overflow-hidden">
+            {/* Banner avec gradient bleu-orange comme dans l'image */}
+            <div className="bg-gradient-to-r from-slate-700 via-slate-600 to-orange-500 h-40 relative">
+              <div className="absolute inset-0 bg-black/10"></div>
+              {/* Motif décoratif subtil */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-4 right-4 w-32 h-32 bg-white rounded-full opacity-20"></div>
+                <div className="absolute bottom-4 left-4 w-24 h-24 bg-white rounded-full opacity-15"></div>
+              </div>
+            </div>
+            
+            {/* Contenu du profil avec nom d'utilisateur professionnel */}
+            <div className="px-8 pb-8 -mt-20 relative">
+              <div className="flex flex-col lg:flex-row items-center lg:justify-between gap-6">
+                <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+                  {/* Avatar professionnel avec cercles décoratifs - COULEURS AUTHPAGES */}
+                  <div className="relative">
+                    <div className="w-40 h-40 bg-gradient-to-br from-gray-600 via-gray-700 to-yellow-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white relative overflow-hidden">
+                      <UserCircle className="w-24 h-24 text-white" />
+                      {/* Cercle décoratif interne */}
+                      <div className="absolute inset-4 border-2 border-white/30 rounded-full"></div>
+                    </div>
+                    {/* Badge de rôle repositionné - COULEURS AUTHPAGES */}
+                    <div className="absolute -bottom-3 -right-3">
+                      <div className={`w-16 h-16 bg-gradient-to-br ${roleBadge.color} rounded-full flex items-center justify-center shadow-lg border-3 border-white`}>
+                        <RoleIcon className="w-8 h-8 text-white" />
+                      </div>
+                    </div>
+                    {/* Cercle décoratif externe - COULEURS AUTHPAGES */}
+                    <div className="absolute -top-2 -left-2 w-44 h-44 border-2 border-yellow-200 rounded-full opacity-50"></div>
+                  </div>
+                  
+                  {/* Informations utilisateur avec design professionnel */}
+                  <div className="space-y-4">
+                    {/* Nom d'utilisateur avec style professionnel - COULEURS AUTHPAGES */}
+                    <div className="bg-gradient-to-r from-gray-50 to-yellow-50 rounded-2xl p-6 shadow-lg border border-slate-200">
+                      <div className="text-center sm:text-left">
+                        <h1 className="text-4xl font-bold text-slate-800 mb-2 tracking-wide">
+                          {user?.prenom} {user?.nom}
+                        </h1>
+                        <div className="flex items-center justify-center sm:justify-start gap-3 mb-3">
+                          <div className={`inline-flex items-center px-6 py-3 bg-gradient-to-r ${roleBadge.color} text-white rounded-full text-base font-bold shadow-lg`}>
+                            <RoleIcon className="w-5 h-5 mr-3" />
+                            {roleBadge.text}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center sm:justify-start text-slate-600 gap-3">
+                          <Building2 className="w-5 h-5 text-yellow-500" />
+                          <span className="text-base font-semibold">EXPROM FACILITIES</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {!isEditing && (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="group inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                >
-                  <Edit3 className="w-5 h-5 mr-2 group-hover:rotate-6 transition-transform duration-200" />
-                  Modifier le profil
-                </button>
-              )}
+                {/* Bouton d'édition - COULEURS AUTHPAGES */}
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-gray-700 to-yellow-600 text-white rounded-2xl hover:from-gray-800 hover:to-yellow-700 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 text-lg"
+                  >
+                    <Edit3 className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform duration-200" />
+                    Modifier le profil
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Formulaire de profil */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200/50">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-200">
-            Informations personnelles
-          </h2>
-
-          {errors.general && (
-            <div className="bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl mb-6 shadow-sm">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="text-lg font-semibold text-red-800">Erreur de connexion</h3>
-                  <p className="text-sm text-red-700 mt-1">{errors.general}</p>
-                  <p className="text-xs text-red-600 mt-2">
-                    💡 Assurez-vous que votre serveur Spring Boot est démarré sur <code>http://localhost:8082</code>
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Nom */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nom</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  name="nom"
-                  value={formData.nom}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-xl transition-all duration-200 ${
-                    isEditing
-                      ? "border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 hover:border-gray-400"
-                      : "bg-gray-50 border-gray-200 cursor-not-allowed text-gray-700"
-                  } ${errors.nom ? "border-red-500 bg-red-50" : ""}`}
-                />
-                {errors.nom && <p className="text-red-500 text-sm mt-1">{errors.nom}</p>}
-              </div>
-            </div>
-            {/* Prénom */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  name="prenom"
-                  value={formData.prenom}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-xl transition-all duration-200 ${
-                    isEditing
-                      ? "border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 hover:border-gray-400"
-                      : "bg-gray-50 border-gray-200 cursor-not-allowed text-gray-700"
-                  } ${errors.prenom ? "border-red-500 bg-red-50" : ""}`}
-                />
-                {errors.prenom && <p className="text-red-500 text-sm mt-1">{errors.prenom}</p>}
-              </div>
-            </div>
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-xl transition-all duration-200 ${
-                    isEditing
-                      ? "border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 hover:border-gray-400"
-                      : "bg-gray-50 border-gray-200 cursor-not-allowed text-gray-700"
-                  } ${errors.email ? "border-red-500 bg-red-50" : ""}`}
-                />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-              </div>
-            </div>
-            {/* Téléphone */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  name="telephone"
-                  value={formData.telephone}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  placeholder="Optionnel"
-                  className={`w-full pl-10 pr-4 py-3 border rounded-xl transition-all duration-200 ${
-                    isEditing
-                      ? "border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 hover:border-gray-400"
-                      : "bg-gray-50 border-gray-200 cursor-not-allowed text-gray-700"
-                  }`}
-                />
-              </div>
-            </div>
-            {/* Adresse */}
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Adresse</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <textarea
-                  name="adresse"
-                  value={formData.adresse}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  placeholder="Optionnel"
-                  rows="3"
-                  className={`w-full pl-10 pr-4 py-3 border rounded-xl transition-all duration-200 resize-none ${
-                    isEditing
-                      ? "border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 hover:border-gray-400"
-                      : "bg-gray-50 border-gray-200 cursor-not-allowed text-gray-700"
-                  }`}
-                />
-              </div>
-            </div>
+        <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/50 overflow-hidden">
+          {/* En-tête de section - COULEURS AUTHPAGES */}
+          <div className="bg-gradient-to-r from-gray-100 to-yellow-50 px-8 py-6 border-b border-slate-200">
+            <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+              <User className="w-7 h-7 text-yellow-600" />
+              Informations personnelles
+            </h2>
+            <p className="text-slate-600 mt-1 text-sm">Gérez vos informations de compte professionnel</p>
           </div>
 
-          {/* Section changement de mot de passe */}
-          {isEditing && (
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-6">Changer le mot de passe</h3>
-              <p className="text-gray-600 mb-4 text-sm">
-                Laissez vide si vous ne souhaitez pas changer votre mot de passe
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Mot de passe actuel */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Mot de passe actuel</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type={showCurrentPassword ? "text" : "password"}
-                      name="currentPassword"
-                      value={formData.currentPassword}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 ${
-                        errors.currentPassword ? "border-red-500 bg-red-50" : "border-gray-300 hover:border-gray-400"
-                      }`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                    {errors.currentPassword && <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>}
+          <div className="p-8">
+            {/* Alerte d'erreur générale */}
+            {errors.general && (
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-6 mb-8 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
                   </div>
-                </div>
-                {/* Nouveau mot de passe */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type={showNewPassword ? "text" : "password"}
-                      name="newPassword"
-                      value={formData.newPassword}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 ${
-                        errors.newPassword ? "border-red-500 bg-red-50" : "border-gray-300 hover:border-gray-400"
-                      }`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                    {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>}
-                  </div>
-                </div>
-                {/* Confirmer nouveau mot de passe */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Confirmer nouveau mot de passe</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 ${
-                        errors.confirmPassword ? "border-red-500 bg-red-50" : "border-gray-300 hover:border-gray-400"
-                      }`}
-                    />
-                    {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-red-800 mb-1">Erreur de connexion</h3>
+                    <p className="text-red-700 text-sm mb-3">{errors.general}</p>
+                    <div className="bg-red-100 rounded-lg p-3">
+                      <p className="text-red-700 text-xs font-medium flex items-center gap-2">
+                        💡 <span>Vérifiez que votre serveur Spring Boot est démarré sur <code className="bg-red-200 px-1 rounded">http://localhost:8082</code></span>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Boutons d'action */}
-          {isEditing && (
-            <div className="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
-              <button
-                onClick={handleCancel}
-                disabled={isSaving}
-                className="group px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md transform hover:scale-105 active:scale-95"
-              >
-                <X className="w-5 h-5 mr-2 inline group-hover:rotate-6 transition-transform duration-200" />
-                Annuler
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-semibold disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 flex items-center justify-center"
-              >
-                {isSaving ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                ) : (
-                  <Save className="w-5 h-5 mr-2 group-hover:rotate-6 transition-transform duration-200" />
-                )}
-                <span>Sauvegarder</span>
-              </button>
+            {/* Grille des champs avec design amélioré - COULEURS AUTHPAGES */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Nom */}
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                  NOM DE FAMILLE
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <User className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <input
+                    type="text"
+                    name="nom"
+                    value={formData.nom}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
+                      isEditing
+                        ? "border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg"
+                        : "bg-gradient-to-r from-gray-50 to-yellow-50 border-slate-200 cursor-not-allowed text-slate-700"
+                    } ${errors.nom ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
+                  />
+                  {errors.nom && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.nom}</p>}
+                </div>
+              </div>
+
+              {/* Prénom */}
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                  PRÉNOM
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <User className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <input
+                    type="text"
+                    name="prenom"
+                    value={formData.prenom}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
+                      isEditing
+                        ? "border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg"
+                        : "bg-gradient-to-r from-gray-50 to-yellow-50 border-slate-200 cursor-not-allowed text-slate-700"
+                    } ${errors.prenom ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
+                  />
+                  {errors.prenom && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.prenom}</p>}
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                  ADRESSE EMAIL
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <Mail className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
+                      isEditing
+                        ? "border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg"
+                        : "bg-gradient-to-r from-gray-50 to-yellow-50 border-slate-200 cursor-not-allowed text-slate-700"
+                    } ${errors.email ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
+                  />
+                  {errors.email && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.email}</p>}
+                </div>
+              </div>
+
+              {/* Téléphone */}
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                  TÉLÉPHONE
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <Phone className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <input
+                    type="tel"
+                    name="telephone"
+                    value={formData.telephone}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
+                      isEditing
+                        ? "border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg"
+                        : "bg-gradient-to-r from-gray-50 to-yellow-50 border-slate-200 cursor-not-allowed text-slate-700"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Adresse */}
+              <div className="space-y-3 lg:col-span-2">
+                <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                  ADRESSE
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-4">
+                    <MapPin className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <textarea
+                    name="adresse"
+                    value={formData.adresse}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    rows={3}
+                    className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium resize-none ${
+                      isEditing
+                        ? "border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg"
+                        : "bg-gradient-to-r from-gray-50 to-yellow-50 border-slate-200 cursor-not-allowed text-slate-700"
+                    }`}
+                  />
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* Section mot de passe */}
+            {isEditing && (
+              <div className="mt-12 pt-8 border-t border-slate-200">
+                <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                  <Lock className="w-6 h-6 text-yellow-600" />
+                  Changer le mot de passe
+                </h3>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Mot de passe actuel */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                      MOT DE PASSE ACTUEL
+                    </label>
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <Lock className="w-5 h-5 text-yellow-500" />
+                      </div>
+                      <input
+                        type={showCurrentPassword ? "text" : "password"}
+                        name="currentPassword"
+                        value={formData.currentPassword}
+                        onChange={handleInputChange}
+                        className={`w-full pl-12 pr-12 py-4 border-2 rounded-xl transition-all duration-300 font-medium border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg ${
+                          errors.currentPassword ? "border-red-500 bg-red-50 focus:ring-red-200" : ""
+                        }`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-yellow-600"
+                      >
+                        {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                      {errors.currentPassword && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.currentPassword}</p>}
+                    </div>
+                  </div>
+
+                  {/* Nouveau mot de passe */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                      NOUVEAU MOT DE PASSE
+                    </label>
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <Lock className="w-5 h-5 text-yellow-500" />
+                      </div>
+                      <input
+                        type={showNewPassword ? "text" : "password"}
+                        name="newPassword"
+                        value={formData.newPassword}
+                        onChange={handleInputChange}
+                        className={`w-full pl-12 pr-12 py-4 border-2 rounded-xl transition-all duration-300 font-medium border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg ${
+                          errors.newPassword ? "border-red-500 bg-red-50 focus:ring-red-200" : ""
+                        }`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-yellow-600"
+                      >
+                        {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                      {errors.newPassword && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.newPassword}</p>}
+                    </div>
+                  </div>
+
+                  {/* Confirmer mot de passe */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-bold text-slate-700 bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">
+                      CONFIRMER LE MOT DE PASSE
+                    </label>
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <Lock className="w-5 h-5 text-yellow-500" />
+                      </div>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium border-yellow-300 focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500 hover:border-yellow-400 bg-white shadow-lg ${
+                          errors.confirmPassword ? "border-red-500 bg-red-50 focus:ring-red-200" : ""
+                        }`}
+                      />
+                      {errors.confirmPassword && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.confirmPassword}</p>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Boutons d'action - COULEURS AUTHPAGES */}
+            {isEditing && (
+              <div className="flex flex-col sm:flex-row gap-4 mt-12 pt-8 border-t border-slate-200">
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="flex-1 inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-gray-700 to-yellow-600 text-white rounded-xl hover:from-gray-800 hover:to-yellow-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSaving ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                      Sauvegarde...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-5 h-5 mr-3" />
+                      Sauvegarder les modifications
+                    </>
+                  )}
+                </button>
+                
+                <button
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                  className="flex-1 inline-flex items-center justify-center px-8 py-4 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  <X className="w-5 h-5 mr-3" />
+                  Annuler
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -522,3 +632,4 @@ const ProfilePage = () => {
 }
 
 export default ProfilePage
+

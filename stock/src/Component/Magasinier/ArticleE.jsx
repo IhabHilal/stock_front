@@ -2,35 +2,169 @@
 
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { ChevronLeft, ChevronRight, Search, Package, ShoppingCart } from "lucide-react"
 import {
-  Pencil,
-  Trash2,
-  Plus,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Package,
-  MoreVertical,
-  ShoppingCart,
-} from "lucide-react"
-import { 
-  ChartBarIcon, 
-  UserGroupIcon, 
-  DocumentTextIcon, 
-  ShoppingCartIcon, 
-  UserCircleIcon, 
+  ChartBarIcon,
+  UserGroupIcon,
+  DocumentTextIcon,
+  ShoppingCartIcon,
+  UserCircleIcon,
   ArrowLeftOnRectangleIcon,
   XMarkIcon,
-  Bars3Icon
-} from '@heroicons/react/24/outline';
-import { NavLink } from 'react-router-dom';
+  Bars3Icon,
+} from "@heroicons/react/24/outline"
+import { NavLink } from "react-router-dom"
+// import Navbar from "./Navbar"
 
-import NavbarMM from "./NavbarMM";
+// Composant Navbar
+const Navbar = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const menuItems = [
+    
+    { name: 'Articles', icon: DocumentTextIcon, path: '/articlesE' },
+    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achatE' },
+    { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
+  ];
+
+  const handleLogout = () => {
+    // Logique de déconnexion
+    console.log('Déconnexion effectuée');
+    navigate('/auth');
+  };
+
+  return (
+    <>
+      {/* Bouton mobile */}
+      <button 
+        className="fixed top-4 left-4 z-50 p-2 bg-gradient-to-r from-gray-700 to-yellow-600 rounded-xl text-white lg:hidden shadow-lg hover:shadow-xl transition-all duration-200"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <Bars3Icon className="h-6 w-6" />
+      </button>
+
+      {/* Sidebar mobile */}
+      <div className={`fixed inset-0 z-40 bg-gray-900 bg-opacity-75 transition-opacity lg:hidden ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div className="fixed inset-0 flex">
+          <div 
+            className={`relative w-80 max-w-sm bg-gradient-to-b from-white to-amber-50 transform transition-transform duration-300 ease-in-out shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          >
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-amber-50">
+              <div className="flex items-center">
+                <div className="relative">
+                  <img 
+                    src="src/Component/images/exprom.jpeg" 
+                    alt="EXPROM Logo" 
+                    className="h-12 w-auto object-contain rounded-lg shadow-md"
+                  />
+                </div>
+                <div className="ml-3">
+                  <h2 className="text-lg font-bold bg-gradient-to-r from-gray-700 to-yellow-600 bg-clip-text text-transparent">EXPROM</h2>
+                  <p className="text-xs text-gray-600 font-medium">Admin Panel</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSidebarOpen(false)}
+                className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-all"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            <nav className="p-6">
+              {menuItems.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  className={({ isActive }) => 
+                    `flex items-center px-4 py-3 mb-3 rounded-xl transition-all duration-200 ${
+                      isActive 
+                        ? 'bg-gradient-to-r from-gray-700 to-yellow-600 text-white font-semibold shadow-lg transform scale-105' 
+                        : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-amber-100 hover:shadow-md'
+                    }`
+                  }
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <item.icon className="h-5 w-5 mr-3" />
+                  {item.name}
+                </NavLink>
+              ))}
+              
+              <div className="border-t border-gray-200 pt-6 mt-8">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 hover:shadow-md font-medium"
+                >
+                  <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3" />
+                  Déconnexion
+                </button>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      {/* Sidebar Desktop */}
+      {/* Sidebar Desktop */}
+<div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 bg-gradient-to-b from-white to-amber-50 border-r border-gray-200 shadow-xl">
+  {/* Logo */}
+  <div className="flex items-center justify-center p-8 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-amber-50">
+  <img 
+    src="src/Component/images/exprom.jpeg" 
+    alt="EXPROM Logo" 
+    className="h-16 w-auto object-contain rounded-xl shadow-lg"
+  />
+</div>
 
 
+  {/* Contenu principal avec scroll */}
+  <div className="flex-1 overflow-y-auto px-6 py-8">
+    <div className="space-y-3">
+      {menuItems.map((item) => (
+        <NavLink
+          key={item.name}
+          to={item.path}
+          className={({ isActive }) => 
+            `flex items-center px-5 py-4 rounded-xl transition-all duration-200 font-medium ${
+              isActive 
+                ? 'bg-gradient-to-r from-gray-700 to-yellow-600 text-white shadow-lg transform scale-105' 
+                : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-amber-100 hover:shadow-md hover:transform hover:scale-102'
+            }`
+          }
+        >
+          <div className={`p-2 rounded-lg mr-4 ${
+            ({ isActive }) => isActive 
+              ? 'bg-white bg-opacity-20' 
+              : 'bg-gradient-to-br from-gray-100 to-amber-100'
+          }`}>
+            <item.icon className="h-5 w-5" />
+          </div>
+          <span className="text-sm">{item.name}</span>
+        </NavLink>
+      ))}
+    </div>
+  </div>
 
+  {/* Bouton déconnexion fixé en bas */}
+  <div className="p-6 border-t border-gray-200">
+    <button
+      onClick={handleLogout}
+      className="w-full flex items-center px-5 py-4 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 hover:shadow-md font-medium group"
+    >
+      <div className="p-2 rounded-lg mr-4 bg-red-100 group-hover:bg-red-200 transition-colors">
+        <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+      </div>
+      <span className="text-sm">Logout</span>
+    </button>
+  </div>
+</div>
 
-export default function ArticleMM() {
+    </>
+  );
+};
+
+export default function ArticleE() {
   const navigate = useNavigate()
   const [articles, setArticles] = useState([])
   const [search, setSearch] = useState("")
@@ -49,13 +183,6 @@ export default function ArticleMM() {
       setArticles(data)
     } catch (error) {
       console.error("Erreur lors du chargement des articles:", error)
-    }
-  }
-
-  const deleteArticle = async (id) => {
-    if (window.confirm("Voulez-vous vraiment supprimer cet article ?")) {
-      await fetch(`http://localhost:8082/api/articles/${id}`, { method: "DELETE" })
-      fetchArticles()
     }
   }
 
@@ -124,16 +251,13 @@ export default function ArticleMM() {
     <div className="flex min-h-screen">
       {/* Barre de navigation latérale fixe */}
       <div className="fixed left-0 top-0 bottom-0 z-20">
-        <NavbarMM />
+        <Navbar />
       </div>
 
       {/* Contenu principal avec marge pour la navbar */}
       <div className="flex-1 flex flex-col ml-0 lg:ml-72">
         {/* Bouton mobile */}
-        <button 
-          className="lg:hidden mb-4 p-2 bg-indigo-600 rounded-lg text-white"
-          onClick={() => setSidebarOpen(true)}
-        >
+        <button className="lg:hidden mb-4 p-2 bg-indigo-600 rounded-lg text-white" onClick={() => setSidebarOpen(true)}>
           <Bars3Icon className="h-6 w-6" />
         </button>
 
@@ -149,29 +273,23 @@ export default function ArticleMM() {
                     </div>
                     <h2 className="ml-3 text-l font-bold text-gray-800">Admin</h2>
                   </div>
-                  <button 
-                    onClick={() => setSidebarOpen(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
+                  <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
 
                 <nav className="p-4">
                   {[
-                
-                    { name: 'Articles', icon: DocumentTextIcon, path: '/articlesMM' },
-                    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achatMM' },
-                    { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
+                    { name: "Articles", icon: DocumentTextIcon, path: "/articlesE" },
+                    { name: "DemandeAchats", icon: ShoppingCartIcon, path: "/demandes-achatE" },
+                    { name: "Profile", icon: UserCircleIcon, path: "/prof-admin" },
                   ].map((item) => (
                     <NavLink
                       key={item.name}
                       to={item.path}
-                      className={({ isActive }) => 
+                      className={({ isActive }) =>
                         `flex items-center px-4 py-3 mb-2 rounded-lg transition-all ${
-                          isActive 
-                            ? 'bg-indigo-100 text-indigo-700 font-medium' 
-                            : 'text-gray-700 hover:bg-gray-100'
+                          isActive ? "bg-indigo-100 text-indigo-700 font-medium" : "text-gray-700 hover:bg-gray-100"
                         }`
                       }
                       onClick={() => setSidebarOpen(false)}
@@ -180,11 +298,12 @@ export default function ArticleMM() {
                       {item.name}
                     </NavLink>
                   ))}
-                  
+
                   <button
                     onClick={() => {
-                      console.log('Déconnexion effectuée');
-                      navigate('/auth');
+                      localStorage.removeItem("currentUser")
+                      console.log("Déconnexion effectuée")
+                      navigate("/auth")
                     }}
                     className="w-full flex items-center px-4 py-3 mt-10 text-red-600 hover:bg-red-50 rounded-lg transition-all"
                   >
@@ -197,9 +316,9 @@ export default function ArticleMM() {
           </div>
         )}
 
-        {/* Contenu de la page Article */}
-        <div className="min-h-screen ">
-          {/* Header Section */}
+        {/* Contenu de la page ArticleE */}
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-100">
+          {/* Header Section - Sans bouton Ajouter */}
           <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -209,18 +328,11 @@ export default function ArticleMM() {
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                      Gestion des Articles
+                      Consultation des Articles
                     </h1>
-                    <p className="text-slate-600 mt-1">Gérer et organiser les articles du stock</p>
+                    <p className="text-slate-600 mt-1">Consulter et rechercher les articles du stock</p>
                   </div>
                 </div>
-                <button
-                  className="group bg-gradient-to-r from-orange-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                  onClick={() => navigate("/ajout-articleMM")}
-                >
-                  <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
-                  Ajouter un Article
-                </button>
               </div>
             </div>
           </div>
@@ -261,7 +373,7 @@ export default function ArticleMM() {
             </div>
           </div>
 
-          {/* Table Section */}
+          {/* Table Section - Sans colonne Actions */}
           <div className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
             <div className="max-w-7xl mx-auto">
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
@@ -278,12 +390,10 @@ export default function ArticleMM() {
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-gray-50 to-orange-50 border-b border-gray-200/50">
                       <tr>
-                        {["Article", "Prix & Stock", "Catégorie", "État", "Actions"].map((th, i) => (
+                        {["Article", "Prix & Stock", "Catégorie", "État"].map((th, i) => (
                           <th
                             key={i}
-                            className={`px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider ${
-                              th === "Actions" ? "text-center" : ""
-                            }`}
+                            className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"
                           >
                             {th}
                           </th>
@@ -321,7 +431,9 @@ export default function ArticleMM() {
                             </td>
                             <td className="px-6 py-4">
                               <div className="space-y-1">
-                                <div className="text-lg font-bold text-gray-900">{article.prix_unitaire?.toFixed(2)} €</div>
+                                <div className="text-lg font-bold text-gray-900">
+                                  {article.prix_unitaire?.toFixed(2)} €
+                                </div>
                                 <div className={`text-sm font-medium ${stockStatus.color}`}>
                                   Stock: {article.stock} {article.unite || "unités"}
                                 </div>
@@ -341,7 +453,9 @@ export default function ArticleMM() {
                                 {article.categorie}
                               </span>
                               {article.designation && (
-                                <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">{article.designation}</div>
+                                <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
+                                  {article.designation}
+                                </div>
                               )}
                             </td>
                             <td className="px-6 py-4">
@@ -353,31 +467,6 @@ export default function ArticleMM() {
                                 {article.etat || "Non défini"}
                               </span>
                             </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center justify-center gap-2">
-                                <button
-                                  className="group/btn bg-orange-50 hover:bg-orange-100 text-orange-600 hover:text-orange-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => navigate(`/modif-articleMM/${article.id}`)}
-                                  title="Modifier"
-                                >
-                                  <Pencil className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
-                                </button>
-                                <button
-                                  className="group/btn bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => deleteArticle(article.id)}
-                                  title="Supprimer"
-                                >
-                                  <Trash2 className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" />
-                                </button>
-                                <button
-                                  className="group/btn bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-700 p-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-110"
-                                  onClick={() => navigate(`/modif-articleMM/${article.id}`)}
-                                  title="Modifier l'article"
-                                >
-                                  <MoreVertical className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-200" />
-                                </button>
-                              </div>
-                            </td>
                           </tr>
                         )
                       })}
@@ -387,30 +476,21 @@ export default function ArticleMM() {
                         currentArticles.length < itemsPerPage &&
                         Array.from({ length: itemsPerPage - currentArticles.length }).map((_, index) => (
                           <tr key={`empty-${index}`} className="h-16">
-                            <td className="px-6 py-4" colSpan="5"></td>
+                            <td className="px-6 py-4" colSpan="4"></td>
                           </tr>
                         ))}
 
                       {filteredArticles.length === 0 && (
                         <tr>
-                          <td colSpan="5" className="px-6 py-16 text-center">
+                          <td colSpan="4" className="px-6 py-16 text-center">
                             <div className="flex flex-col items-center gap-6">
                               <div className="bg-gradient-to-br from-gray-100 to-gray-200 p-8 rounded-3xl shadow-lg">
                                 <Search className="w-16 h-16 text-gray-400" />
                               </div>
                               <div>
                                 <p className="text-xl font-bold text-gray-900 mb-2">Aucun article trouvé</p>
-                                <p className="text-gray-500">
-                                  Essayez de modifier votre recherche ou ajoutez un nouvel article
-                                </p>
+                                <p className="text-gray-500">Essayez de modifier votre recherche</p>
                               </div>
-                              <button
-                                onClick={() => navigate("/ajout-article")}
-                                className="bg-gradient-to-r from-orange-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
-                              >
-                                <Plus className="w-5 h-5" />
-                                Ajouter le premier article
-                              </button>
                             </div>
                           </td>
                         </tr>

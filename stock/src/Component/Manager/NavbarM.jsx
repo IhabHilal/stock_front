@@ -11,15 +11,14 @@ import {
   Bars3Icon
 } from '@heroicons/react/24/outline';
 
-const Navbar = () => {
+const NavbarE = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: 'Dashboard', icon: ChartBarIcon, path: '/dash-admin' },
-    { name: 'Utilisateurs', icon: UserGroupIcon, path: '/utilisateurs' },
-    { name: 'Articles', icon: DocumentTextIcon, path: '/articles' },
-    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achat' },
+    
+    { name: 'Articles', icon: DocumentTextIcon, path: '/articlesM' },
+    { name: 'DemandeAchats', icon: ShoppingCartIcon, path: '/demandes-achatM' },
     { name: 'Profile', icon: UserCircleIcon, path: '/prof-admin' },
   ];
 
@@ -159,4 +158,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarE;
