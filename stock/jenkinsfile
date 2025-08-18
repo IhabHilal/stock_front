@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:dind'  // Docker-in-Docker
+            args '--privileged'  // Nécessaire pour DinD
+        }
+    }
     
     environment {
         // Variables d'environnement
@@ -21,8 +26,7 @@ pipeline {
             steps {
                 echo '🔨 Construction de l\'image Docker...'
                 script {
-                    // Construction de l'image Docker
-                    def dockerImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                     echo "✅ Image Docker construite: ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
