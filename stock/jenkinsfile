@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:dind'  // Docker-in-Docker
-            args '--privileged'  // Nécessaire pour DinD
-        }
-    }
+    agent any
     
     environment {
         // Variables d'environnement
