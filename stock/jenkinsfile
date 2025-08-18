@@ -1,0 +1,109 @@
+pipeline {
+    agent any
+    
+    environment {
+        // Variables d'environnement
+        DOCKER_IMAGE = 'ihab10/stock-frontend'
+        DOCKER_TAG = "${BUILD_NUMBER}"
+        GITHUB_REPO = 'https://github.com/IhabHilal/stock_front.git'
+    }
+    
+    stages {
+        stage('1. Checkout Code') {
+            steps {
+                echo '📥 Récupération du code source depuis GitHub...'
+                git branch: 'main', url: "${GITHUB_REPO}"
+                echo '✅ Code récupéré avec succès'
+            }
+        }
+        
+        stage('2. Build Docker Image') {
+            steps {
+                echo '🔨 Construction de l\'image Docker...'
+                script {
+                    // Construction de l'image Docker
+                    def dockerImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                    echo "✅ Image Docker construite: ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+        
+        stage('3. Test Image') {
+            steps {
+                echo '🧪 Test de l\'image Docker...'
+                script {
+                    // Test simple : vérifier que l'image démarre correctement
+                    sh """
+                        docker run --rm -d --name test-container -p 5173:5173 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        sleep 10
+                        # Vérifier que le container est en cours d'exécution
+                        docker ps | grep test-container
+                        # Arrêter le container de test
+                        docker stop test-container
+                    """
+                    echo '✅ Tests passés avec succès'
+                }
+            }
+        }
+        
+        stage('4. Push to Docker Hub') {
+            steps {
+                echo '📤 Publication sur Docker Hub...'
+                script {
+                    // Connexion à Docker Hub et push de l'image
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', 
+                                                    usernameVariable: 'DOCKER_USERNAME', 
+                                                    passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh """
+                            echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                            docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
+                            docker push ${DOCKER_IMAGE}:latest
+                        """
+                    }
+                    echo "✅ Image publiée sur Docker Hub: ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+        
+        stage('5. Deploy') {
+            steps {
+                echo '🚀 Déploiement de l\'application...'
+                script {
+                    // Déploiement simple (arrêter l'ancien container et démarrer le nouveau)
+                    sh """
+                        # Arrêter et supprimer l'ancien container s'il existe
+                        docker stop stock-frontend || true
+                        docker rm stock-frontend || true
+                        
+                        # Démarrer le nouveau container
+                        docker run -d --name stock-frontend -p 5173:5173 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        
+                        # Vérifier que le container est démarré
+                        sleep 5
+                        docker ps | grep stock-frontend
+                    """
+                    echo '✅ Application déployée avec succès sur le port 5173'
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo '🧹 Nettoyage des ressources...'
+            // Nettoyage des images Docker locales anciennes
+            sh """
+                # Supprimer les images non utilisées pour libérer l'espace
+                docker image prune -f || true
+            """
+        }
+        success {
+            echo '🎉 Pipeline exécuté avec succès!'
+            echo "🌐 Application accessible sur: http://localhost:5173"
+        }
+        failure {
+            echo '❌ Pipeline échoué. Vérifiez les logs ci-dessus.'
+        }
+    }
+}
