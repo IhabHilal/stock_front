@@ -211,7 +211,7 @@ const Dashboard = () => {
         <div className="min-h-screen p-4 md:p-6 ">
           <div className="max-w-7xl mx-auto">
             <div className="mb-6 md:mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Tableau de bord</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Tableau de bord Admin </h1>
               <p className="text-gray-600 mt-1 md:mt-2">Vue d'ensemble du système de gestion de stock</p>
             </div>
 
