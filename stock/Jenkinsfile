@@ -22,7 +22,7 @@ pipeline {
                 echo '🔨 Construction de l\'image Docker...'
                 script {
                     sh 'docker --version' // Vérification de la version de Docker
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./stock"
                     echo "✅ Image Docker construite: ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
